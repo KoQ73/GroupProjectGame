@@ -313,7 +313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 1
-  moveDistance: 3
+  moveDistance: 2
   movableTile: {fileID: 2100000, guid: 910f883da76f65a4e90b7176c1f770cc, type: 2}
   nonMovableTile: {fileID: 2100000, guid: ccd95a9eedd16eb4f816845b5ac0cf8b, type: 2}
 --- !u!4 &121739298
