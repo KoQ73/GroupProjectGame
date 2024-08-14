@@ -72,7 +72,7 @@ public class UnitController : MonoBehaviour
 
     IEnumerator FollowPath()
     {
-        for (int i = 1; i < path.Count; i++)
+        for (int i = 1; i < 3; i++)
         {
             Vector3 startPosition = selectedUnit.position;
             Vector3 endPosition = gridManager.GetPositionFromCoordinates(path[i].cords, startPosition.y);
