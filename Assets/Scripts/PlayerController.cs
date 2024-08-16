@@ -47,9 +47,6 @@ public class PlayerController : MonoBehaviour
         currentLocation = new Vector2Int();
         selectedLocation = new Vector2Int();
 
-        //PopulateMovableArea();
-        //EnableMovableTiles();
-
     }
 
     // Update is called once per frame
@@ -72,8 +69,6 @@ public class PlayerController : MonoBehaviour
                         selectedUnit.transform.position = new Vector3(selectedLocation.x, selectedUnit.position.y, selectedLocation.y);
 
                         pathList = pathFinder.findPath(gridManager.GetTile(currentLocation), gridManager.GetTile(selectedLocation));
-
-                        UnityEngine.Debug.Log(pathList.Count);
 
                     }
                 }
@@ -227,27 +222,20 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        bool containsImpurities = true;
+        List<Vector2Int> tempCords = new List<Vector2Int>();
 
-        while (containsImpurities)
+        for (int i = 0; i < movableCords.Count; i++)
         {
-            bool deletedCords = false;
-
-            for (int i = 0; i < movableCords.Count; i++)
+            List<Tile> testPath = pathFinder.findPath(gridManager.GetTile(currentLocation), gridManager.GetTile(movableCords[i]));
+            if (testPath.Count <= moveDistance && testPath.Count != 0)
             {
-                List<Tile> testPath = pathFinder.findPath(gridManager.GetTile(currentLocation), gridManager.GetTile(movableCords[i]));
-                if (testPath.Count > moveDistance)
-                {
-                    movableCords.Remove(movableCords[i]);
-                    deletedCords = true;
-                }
-            }
-
-            if (!deletedCords)
-            {
-                containsImpurities = false;
+                UnityEngine.Debug.Log(movableCords[i] + " Count: " + testPath.Count);
+                tempCords.Add(movableCords[i]);
             }
         }
+
+        movableCords = tempCords;
+        movableCords.Add(currentLocation);
 
         Tile topTile = gridManager.GetTile(new Vector2Int(currentLocation.x, currentLocation.y + 1));
         Tile bottomTile = gridManager.GetTile(new Vector2Int(currentLocation.x, currentLocation.y - 1));

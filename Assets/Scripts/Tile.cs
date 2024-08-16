@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    [SerializeField] bool blocked;
-
     public Vector2Int cords;
 
     GridManager gridManager;
@@ -22,9 +20,9 @@ public class Tile : MonoBehaviour
     {
         SetCords();
 
-        if (blocked)
+        if (isBlocked)
         {
-            gridManager.BlockNode(cords);
+            gridManager.BlockTile(cords);
         }
     }
 
