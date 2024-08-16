@@ -1,92 +1,151 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class UnitController : MonoBehaviour
 {
-    [SerializeField] float movementSpeed = 3f;
+    [SerializeField] float movementSpeed = 1f;
+    [SerializeField] GameObject unitObject;
 
-    Transform selectedUnit;
+    Unit selectedUnit;
+    int selectedUnitMove = 0;
     bool unitSelected = false;
+    bool isMoving = false;
 
-    List<Node> path = new List<Node>();
+    List<Unit> units = new List<Unit>();
+
+    public List<Unit> Units { get { return units; } }
+
+    List<Tile> pathList = new List<Tile>();
 
     GridManager gridManager;
-    Pathfinding pathFinder;
+    PathFinderA pathFinder;
+    GameObject player;
 
     void Start()
     {
         gridManager = FindObjectOfType<GridManager>();
-        pathFinder = FindObjectOfType<Pathfinding>();
+        pathFinder = new PathFinderA();
+        player = GameObject.FindGameObjectWithTag("Player");
+        PopulateUnits();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+
+    }
+
+    private void PopulateUnits()
+    {
+        units.Clear();
+
+        for (int i = 0; i < 5; i++)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+            Vector2Int unitCords = new Vector2Int();
+            bool cordsTaken = true;
 
-            bool hasHit = Physics.Raycast(ray, out hit);
-
-
-
-            if (hasHit)
+            while (cordsTaken)
             {
-                if (hit.transform.tag == "Tile")
+                unitCords = new Vector2Int(Random.Range(0, gridManager.GridSize.x), Random.Range(0, gridManager.GridSize.y));
+
+                cordsTaken = coordsExist(unitCords);
+            }
+
+            GameObject gameObject = (GameObject)Instantiate(unitObject, new Vector3(unitCords.x, 0.55f, unitCords.y), Quaternion.identity);
+            gridManager.BlockTile(unitCords);
+            units.Add(new Unit(unitCords, 2, movementSpeed, 5, 2, "Basic", gameObject));
+        }
+    }
+
+    public void ActivateUnits()
+    {
+        Vector2Int playerCords = new Vector2Int((int)player.transform.position.x, (int)player.transform.position.z);
+        //StopAllCoroutines();
+
+        foreach (Unit unit in units)
+        {
+            //Vector2Int startCords = new Vector2Int((int)selectedUnit.transform.position.x, (int)selectedUnit.transform.position.z) / gridManager.UnityGridSize;
+            pathList = pathFinder.findPath(gridManager.GetTile(unit.cords), gridManager.GetTile(playerCords));
+
+            gridManager.ReleaseTile(unit.cords);
+            selectedUnit = unit;
+            selectedUnitMove = unit.moveDistance;
+
+            FollowPath(unit);
+
+
+        }
+
+
+    }
+
+    private bool coordsExist(Vector2Int unitCords)
+    {
+
+        foreach (Unit unit in units)
+        {
+            if (unit.cords == unitCords)
+            {
+                return true;
+            }
+        }
+
+        for (int x = (int)player.transform.position.x - 1; x < (int)player.transform.position.x + 2; x++)
+        {
+            for (int y = (int)player.transform.position.z - 1; y < (int)player.transform.position.z + 2; y++)
+            {
+                Vector2Int safeSpace = new Vector2Int(x, y);
+
+                if (safeSpace == unitCords)
                 {
-                    if (unitSelected)
-                    {
-                        Vector2Int targetCords = hit.transform.GetComponent<Tile>().cords;
-                        Vector2Int startCords = new Vector2Int((int)selectedUnit.transform.position.x, (int)selectedUnit.transform.position.z) / gridManager.UnityGridSize;
-                        pathFinder.SetNewDestination(startCords, targetCords);
-                        RecalculatePath(true);
-                    }
-                }
-                if (hit.transform.tag == "Unit")
-                {
-                    selectedUnit = hit.transform;
-                    unitSelected = true;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
-    void RecalculatePath(bool resetPath)
+    private void FollowPath(Unit unit)
     {
-        Vector2Int coordinates = new Vector2Int();
-        if (resetPath)
-        {
-            coordinates = pathFinder.StartCords;
-        }
-        else
-        {
-            coordinates = gridManager.GetCoordinatesFromPosition(transform.position);
-        }
-        StopAllCoroutines();
-        path.Clear();
-        path = pathFinder.GetNewPath(coordinates);
-        StartCoroutine(FollowPath());
-    }
 
-    IEnumerator FollowPath()
-    {
-        for (int i = 1; i < 3; i++)
+        if (pathList.Count > 0)
         {
-            Vector3 startPosition = selectedUnit.position;
-            Vector3 endPosition = gridManager.GetPositionFromCoordinates(path[i].cords, startPosition.y);
-            float travelPercent = 0f;
 
-            selectedUnit.LookAt(endPosition);
-
-            while (travelPercent < 1f)
+            for (int i = 0; i < unit.moveDistance; i++)
             {
-                travelPercent += Time.deltaTime * movementSpeed;
-                selectedUnit.position = Vector3.Lerp(startPosition, endPosition, travelPercent);
-                yield return new WaitForEndOfFrame();
+                gridManager.ReleaseTile(unit.cords);
+
+                //Check player's cords
+                if (pathList[i].cords == new Vector2Int((int)player.transform.position.x, (int)player.transform.position.z))
+                {
+                    //pathList.RemoveAt(i);
+                    gridManager.BlockTile(unit.cords);
+                    break;
+                }
+                float travelPercent = 0f;
+
+                while (travelPercent < 1f)
+                {
+                    travelPercent += Time.deltaTime * movementSpeed;
+                    unit.unitGameObject.transform.position = Vector3.MoveTowards(unit.unitGameObject.transform.position, new Vector3(pathList[i].transform.position.x, unit.unitGameObject.transform.position.y, pathList[i].transform.position.z), travelPercent);
+
+                }
+                //PositionUnitOnTile(unit, i);
+
+
+                unit.cords = pathList[i].cords;
+                gridManager.BlockTile(unit.cords);
             }
 
         }
     }
+
+    private void PositionUnitOnTile(Unit unit, int pathIndex)
+    {
+        unit.unitGameObject.transform.position = new Vector3(pathList[pathIndex].transform.position.x, unit.unitGameObject.transform.position.y, pathList[pathIndex].transform.position.z);
+    }
+
 }
