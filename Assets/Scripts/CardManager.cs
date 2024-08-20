@@ -134,9 +134,9 @@ public class CardManager : MonoBehaviour
             
             if (deckPile.Count <= 0)
             {
-                Debug.Log("Reached shuffle discard pile");
-                Debug.Log(deckPile.Count);
-                Debug.Log(discardPile.Count);
+                //Debug.Log("Reached shuffle discard pile");
+                //Debug.Log(deckPile.Count);
+                //Debug.Log(discardPile.Count);
 
                 foreach (Card card in discardPile)
                 {
@@ -147,9 +147,9 @@ public class CardManager : MonoBehaviour
 
                 ShuffleDeck();
 
-                Debug.Log("After shuffling");
-                Debug.Log(deckPile.Count);
-                Debug.Log(discardPile.Count);
+                //Debug.Log("After shuffling");
+                //Debug.Log(deckPile.Count);
+                //Debug.Log(discardPile.Count);
 
             }
 
@@ -160,10 +160,18 @@ public class CardManager : MonoBehaviour
             targetCard.GetComponent<Image>().sprite = targetCardVariables.cardSprite;
             targetCard.transform.Find("CardDescription").gameObject.GetComponent<TextMeshProUGUI>().text = targetCardVariables.cardDescription;
             targetCard.transform.Find("EnergyCost").gameObject.GetComponent<TextMeshProUGUI>().text = targetCardVariables.energyCost.ToString();
-            targetCard.GetComponent<Button>().onClick.AddListener(delegate { TestCardUse(targetCardVariables); });
-            //targetCard.GetComponent<Button>().onClick.AddListener(delegate { SetListenerToConfirmation(targetCardVariables.energyCost); });
-            //targetCard.GetComponent<Button>().onClick.AddListener(MoveConfirmCancelImage);
-            //targetCard.GetComponent<Button>().onClick.AddListener(playerController.MovementCard);
+            
+            if (targetCardVariables.cardName == "Basic Attack")
+            {
+                targetCard.GetComponent<Button>().onClick.AddListener(delegate { SetListenerToConfirmation(targetCardVariables.energyCost); });
+                targetCard.GetComponent<Button>().onClick.AddListener(delegate { BasicAttackConfirmCancelImage(targetCardVariables); });
+               // targetCard.GetComponent<Button>().onClick.AddListener(playerController.AttackCard);
+            }
+            else
+            {
+                targetCard.GetComponent<Button>().onClick.AddListener(delegate { DeleteCard(targetCardVariables); });
+            }
+            
 
             cardsInHand.Add(targetCardVariables);
             deckPile.RemoveAt(0);
@@ -191,7 +199,16 @@ public class CardManager : MonoBehaviour
                 targetCard.GetComponent<Image>().sprite = targetCardVariables.cardSprite;
                 targetCard.transform.Find("CardDescription").gameObject.GetComponent<TextMeshProUGUI>().text = targetCardVariables.cardDescription;
                 targetCard.transform.Find("EnergyCost").gameObject.GetComponent<TextMeshProUGUI>().text = targetCardVariables.energyCost.ToString();
-                targetCard.GetComponent<Button>().onClick.AddListener(delegate { TestCardUse(targetCardVariables); });
+                if (targetCardVariables.cardName == "Basic Attack")
+                {
+                    targetCard.GetComponent<Button>().onClick.AddListener(delegate { SetListenerToConfirmation(targetCardVariables.energyCost); });
+                    targetCard.GetComponent<Button>().onClick.AddListener(delegate { BasicAttackConfirmCancelImage(targetCardVariables); });
+                    //targetCard.GetComponent<Button>().onClick.AddListener(playerController.AttackCard);
+                }
+                else
+                {
+                    targetCard.GetComponent<Button>().onClick.AddListener(delegate { DeleteCard(targetCardVariables); });
+                }
             }
         }
         else
@@ -210,14 +227,23 @@ public class CardManager : MonoBehaviour
                 targetCard.GetComponent<Image>().sprite = targetCardVariables.cardSprite;
                 targetCard.transform.Find("CardDescription").gameObject.GetComponent<TextMeshProUGUI>().text = targetCardVariables.cardDescription;
                 targetCard.transform.Find("EnergyCost").gameObject.GetComponent<TextMeshProUGUI>().text = targetCardVariables.energyCost.ToString();
-                targetCard.GetComponent<Button>().onClick.AddListener(delegate { TestCardUse(targetCardVariables); });
+                if (targetCardVariables.cardName == "Basic Attack")
+                {
+                    targetCard.GetComponent<Button>().onClick.AddListener(delegate { SetListenerToConfirmation(targetCardVariables.energyCost); });
+                    targetCard.GetComponent<Button>().onClick.AddListener(delegate { BasicAttackConfirmCancelImage(targetCardVariables); });
+                    //targetCard.GetComponent<Button>().onClick.AddListener(playerController.AttackCard);
+                }
+                else
+                {
+                    targetCard.GetComponent<Button>().onClick.AddListener(delegate { DeleteCard(targetCardVariables); });
+                }
             }
         }
         
     }
 
     //function for testing card usage
-    private void TestCardUse(Card card)
+    private void DeleteCard(Card card)
     {
         if (totalEnergy >= card.energyCost)
         {
@@ -295,5 +321,28 @@ public class CardManager : MonoBehaviour
             playerController.MovementCard();
         }
         
+    }
+
+    private void BasicAttackConfirmCancelImage(Card card)
+    {
+        if (totalEnergy >= 1)
+        {
+            confirmBtn.GetComponent<Button>().onClick.RemoveAllListeners();
+            cancelBtn.GetComponent<Button>().onClick.RemoveAllListeners();
+
+            confirmBtn.GetComponent<Button>().onClick.AddListener(delegate { playerController.ConfirmAttackCard(card.cardValue); });
+            confirmBtn.GetComponent<Button>().onClick.AddListener(delegate { DeleteCard(card); });
+            confirmBtn.GetComponent<Button>().onClick.AddListener(BackToCards);
+            //confirmBtn.GetComponent<Button>().onClick.AddListener(DeactivateMoveCard);
+            cancelBtn.GetComponent<Button>().onClick.AddListener(playerController.CancelAttackCard);
+            cancelBtn.GetComponent<Button>().onClick.AddListener(BackToCards);
+
+            cardImageUI.GetComponent<Image>().sprite = card.cardSprite;
+            cardImageUI.transform.Find("CardDescription").gameObject.GetComponent<TextMeshProUGUI>().text = card.cardDescription;
+            cardImageUI.transform.Find("EnergyCost").gameObject.GetComponent<TextMeshProUGUI>().text = card.energyCost.ToString();
+
+            playerController.AttackCard();
+        }
+
     }
 }

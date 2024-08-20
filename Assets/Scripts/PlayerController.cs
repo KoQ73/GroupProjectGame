@@ -204,7 +204,9 @@ public class PlayerController : MonoBehaviour
         foreach (Unit unit in units)
         {
             if (unit.cords == selectedLocation) {
+                UnityEngine.Debug.Log("Health before: " + unit.health);
                 unit.health -= dmg;
+                UnityEngine.Debug.Log("Health after: " + unit.health);
                 break;
             }
         }
