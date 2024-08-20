@@ -97,6 +97,7 @@ public class PlayerController : MonoBehaviour
                     {
                         selectedLocation = hit.transform.GetComponent<Labeller>().cords;
                         //Check is Selected Location has an enemy
+
                     }
                 }
             }
@@ -182,10 +183,10 @@ public class PlayerController : MonoBehaviour
         isAttacking = true;
     }
 
-    public void ConfirmAttackCard()
+    public void ConfirmAttackCard(int dmg)
     {
         DisableAttackableTiles();
-
+        DealAttack(dmg);
         isAttacking = false;
     }
 
@@ -196,6 +197,18 @@ public class PlayerController : MonoBehaviour
         isAttacking = false;
     }
 
+    public void DealAttack(int dmg){
+        // Check which unit is selected
+        List<Unit> units = FindObjectOfType<UnitController>().Units;
+        
+        foreach (Unit unit in units)
+        {
+            if (unit.cords == selectedLocation) {
+                unit.health -= dmg;
+                break;
+            }
+        }
+    }
     private void GetInRangeTiles()
     {
         movableCords.Clear();
