@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] float movementSpeed = 2f;
     [SerializeField] int moveDistance = 2;
+    public int playerHealth = 10;
+
     [SerializeField] Material movableTile;
     [SerializeField] Material inactiveTile;
     [SerializeField] Material attackableTile;

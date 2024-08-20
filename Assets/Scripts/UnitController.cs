@@ -21,12 +21,14 @@ public class UnitController : MonoBehaviour
     GridManager gridManager;
     CardManager cardManager;
     PathFinderA pathFinder;
+    PlayerController playerController;
     GameObject player;
 
     void Start()
     {
         gridManager = FindObjectOfType<GridManager>();
         cardManager = FindObjectOfType<CardManager>();
+        playerController = FindObjectOfType<PlayerController>();
         pathFinder = new PathFinderA();
         player = GameObject.FindGameObjectWithTag("Player");
 
@@ -127,6 +129,40 @@ public class UnitController : MonoBehaviour
         return false;
     }
 
+    private void AttackPlayerMelee(Unit unit)
+    {
+        List<Vector2Int> targets = new List<Vector2Int>();
+        Vector2Int playerCord = new Vector2Int((int)player.transform.position.x, (int)player.transform.position.z);
+
+        Vector2Int topCord = new Vector2Int(unit.cords.x, unit.cords.y + 1);
+        Vector2Int bottomCord = new Vector2Int(unit.cords.x, unit.cords.y - 1);
+        Vector2Int leftCord = new Vector2Int(unit.cords.x - 1, unit.cords.y);
+        Vector2Int rightCord = new Vector2Int(unit.cords.x + 1, unit.cords.y);
+
+        targets.Add(topCord);
+        targets.Add(bottomCord);
+        targets.Add(leftCord);
+        targets.Add(rightCord);
+
+        for (int i = 0; i < targets.Count; i++)
+        {
+            Vector2Int target = targets[i];
+            if (playerCord == target)
+            {
+                //Debug.Log("Player Health Before: " + playerController.playerHealth);
+                playerController.playerHealth -= unit.attackDmg;
+                //Debug.Log("Player Health After: " + playerController.playerHealth);
+
+                if (playerController.playerHealth <= 0)
+                {
+
+                }
+
+                break;
+            }
+        }
+    }
+
     IEnumerator FollowPath(Vector2Int playerCords)
     {
 
@@ -158,13 +194,15 @@ public class UnitController : MonoBehaviour
 
                     }
                     //PositionUnitOnTile(unit, i);
-
+                    unit.unitGameObject.transform.LookAt(new Vector3(pathList[i].transform.position.x, unit.unitGameObject.transform.position.y, pathList[i].transform.position.z));
 
                     unit.cords = pathList[i].cords;
                     gridManager.BlockTile(unit.cords);
                 }
 
             }
+
+            AttackPlayerMelee(unit);
         }
 
         cardManager.StartTurnCardsInHand();
