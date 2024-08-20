@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     List<Vector2Int> attackableCords;
 
     GridManager gridManager;
+    CardManager cardManager;
     PathFinderA pathFinder;
     private RangeFinder rangeFinder;
 
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         gridManager = FindObjectOfType<GridManager>();
+        cardManager = FindObjectOfType<CardManager>();
         pathFinder = new PathFinderA();
         rangeFinder = new RangeFinder();
 
@@ -118,6 +120,7 @@ public class PlayerController : MonoBehaviour
                 if (pathList.Count <= 0)
                 {
                     move = false;
+                    cardManager.BackToCards();
                 }
                 else
                 {
@@ -128,6 +131,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             move = false;
+            cardManager.BackToCards();
         }
 
 
@@ -165,6 +169,7 @@ public class PlayerController : MonoBehaviour
 
         move = true;
         isMoving = false;
+
     }
 
     public void AttackCard()

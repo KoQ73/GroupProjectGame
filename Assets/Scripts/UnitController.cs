@@ -7,27 +7,30 @@ public class UnitController : MonoBehaviour
 {
     [SerializeField] float movementSpeed = 0.5f;
     [SerializeField] GameObject unitObject;
+    [SerializeField] GameObject obstacleObject;
 
     Unit selectedUnit;
-    int selectedUnitMove = 0;
-    bool unitSelected = false;
-    bool isMoving = false;
 
     List<Unit> units = new List<Unit>();
+    List<Unit> obstacles = new List<Unit>();
 
     public List<Unit> Units { get { return units; } }
 
     List<Tile> pathList = new List<Tile>();
 
     GridManager gridManager;
+    CardManager cardManager;
     PathFinderA pathFinder;
     GameObject player;
 
     void Start()
     {
         gridManager = FindObjectOfType<GridManager>();
+        cardManager = FindObjectOfType<CardManager>();
         pathFinder = new PathFinderA();
         player = GameObject.FindGameObjectWithTag("Player");
+
+        PopulateObstacles();
         PopulateUnits();
     }
 
@@ -35,6 +38,28 @@ public class UnitController : MonoBehaviour
     void Update()
     {
 
+    }
+
+    private void PopulateObstacles()
+    {
+        obstacles.Clear();
+
+        for (int i = 0; i < 4; i++)
+        {
+            Vector2Int obstacleCords = new Vector2Int();
+            bool cordsTaken = true;
+
+            while (cordsTaken)
+            {
+                obstacleCords = new Vector2Int(Random.Range(0, gridManager.GridSize.x), Random.Range(0, gridManager.GridSize.y));
+
+                cordsTaken = coordsExist(obstacleCords);
+            }
+
+            GameObject gameObject = (GameObject)Instantiate(obstacleObject, new Vector3(obstacleCords.x, 0.35f, obstacleCords.y), Quaternion.identity);
+            gridManager.BlockTile(obstacleCords);
+            obstacles.Add(new Unit(obstacleCords, 0, 0, 5, 0, "Null", gameObject));
+        }
     }
 
     private void PopulateUnits()
@@ -61,6 +86,7 @@ public class UnitController : MonoBehaviour
 
     public void ActivateUnits()
     {
+        cardManager.DuringUnitTurn();
         Vector2Int playerCords = new Vector2Int((int)player.transform.position.x, (int)player.transform.position.z);
 
         StartCoroutine(FollowPath(playerCords));
@@ -68,6 +94,14 @@ public class UnitController : MonoBehaviour
 
     private bool coordsExist(Vector2Int unitCords)
     {
+
+        foreach (Unit obstacle in obstacles)
+        {
+            if (obstacle.cords == unitCords)
+            {
+                return true;
+            }
+        }
 
         foreach (Unit unit in units)
         {
@@ -133,6 +167,7 @@ public class UnitController : MonoBehaviour
             }
         }
 
+        cardManager.StartTurnCardsInHand();
     }
 
     private void PositionUnitOnTile(Unit unit, int pathIndex)
