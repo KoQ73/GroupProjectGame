@@ -37,7 +37,6 @@ public class PlayerController : MonoBehaviour
     PathFinderA pathFinder;
     private RangeFinder rangeFinder;
 
-
     // Start is called before the first frame update
     private void Start()
     {
@@ -206,7 +205,7 @@ public class PlayerController : MonoBehaviour
         List<Unit> units = FindObjectOfType<UnitController>().Units;
 
         // Check which units to destroy
-        List<int> toDestroy = new List<int>();
+        List<Unit> toDestroy = new List<Unit>();
 
         for (int i = 0; i < units.Count; i++)
         {
@@ -217,21 +216,19 @@ public class PlayerController : MonoBehaviour
                 // if health after is zero or less than zero, add it to toDestroy List
                 if (u.health <= 0)
                 {
-                    toDestroy.Add(i);
+                    toDestroy.Add(u);
                 }
                 break;
             }
         }
 
-        foreach(int i  in toDestroy)
+        foreach(Unit u  in toDestroy)
         {
-            Unit u = units[i];
             // Destroy the gameObject
             Destroy(u.unitGameObject, 1);
             // Release the tile
             gridManager.ReleaseTile(u.cords);
             // Remove in array
-            //units.RemoveAt(i);
             units.Remove(u);
         }
 
