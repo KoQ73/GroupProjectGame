@@ -175,9 +175,23 @@ public class UnitController : MonoBehaviour
             Vector2Int target = targets[i];
             if (playerCord == target)
             {
-                //Debug.Log("Player Health Before: " + playerController.playerHealth);
-                playerController.playerHealth -= unit.attackDmg;
-                //Debug.Log("Player Health After: " + playerController.playerHealth);
+                // Adding shield
+                int remainingAttack = 0;
+                if (playerController.shield > 0)
+                {
+                    playerController.shield -= unit.attackDmg;
+                    if (playerController.shield < 0)
+                    {
+                        remainingAttack = -playerController.shield;
+                        playerController.playerHealth -= remainingAttack;
+                    }
+                }
+                else
+                {
+                    //Debug.Log("Player Health Before: " + playerController.playerHealth);
+                    playerController.playerHealth -= unit.attackDmg;
+                    //Debug.Log("Player Health After: " + playerController.playerHealth);
+                }
 
                 if (playerController.playerHealth <= 0)
                 {

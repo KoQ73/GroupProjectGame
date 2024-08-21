@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] float movementSpeed = 2f;
     [SerializeField] int moveDistance = 2;
-    public int playerHealth = 1000;
+    public int playerHealth;
     public int shield = 0;
 
     [SerializeField] Material movableTile;
@@ -251,20 +251,22 @@ public class PlayerController : MonoBehaviour
     // Attack
     public void ShieldCard()
     {
-        
+        // add shield
+        shield += 4;
     }
 
     // Confirm
     public void ConfirmShieldCard()
     {
         // increase player health for one round
+        
     }
 
     // Cancel
     public void CancelShieldCard()
     {
         // decrease player health after one round
-        
+        shield -= 4;
     }
 
     private void GetInRangeTiles()
