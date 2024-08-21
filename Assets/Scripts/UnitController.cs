@@ -8,8 +8,10 @@ public class UnitController : MonoBehaviour
     [SerializeField] float movementSpeed = 0.5f;
     [SerializeField] GameObject unitObject;
     [SerializeField] GameObject obstacleObject;
+    [SerializeField] GameObject loseScreen;
 
     Unit selectedUnit;
+    bool isDefeated;
 
     List<Unit> units = new List<Unit>();
     List<Unit> obstacles = new List<Unit>();
@@ -31,6 +33,7 @@ public class UnitController : MonoBehaviour
         playerController = FindObjectOfType<PlayerController>();
         pathFinder = new PathFinderA();
         player = GameObject.FindGameObjectWithTag("Player");
+        isDefeated = false;
 
         PopulateObstacles();
         PopulateUnits();
@@ -155,7 +158,8 @@ public class UnitController : MonoBehaviour
 
                 if (playerController.playerHealth <= 0)
                 {
-
+                    isDefeated = true;
+                    loseScreen.SetActive(true);
                 }
 
                 break;
@@ -168,44 +172,52 @@ public class UnitController : MonoBehaviour
 
         foreach (Unit unit in units)
         {
-            //gridManager.ReleaseTile(unit.cords);
-            pathList = pathFinder.findPath(gridManager.GetTile(unit.cords), gridManager.GetTile(playerCords));
-            if (pathList.Count > 0)
+            if (!isDefeated)
             {
-
-                for (int i = 0; i < unit.moveDistance; i++)
+                //gridManager.ReleaseTile(unit.cords);
+                pathList = pathFinder.findPath(gridManager.GetTile(unit.cords), gridManager.GetTile(playerCords));
+                if (pathList.Count > 0)
                 {
-                    gridManager.ReleaseTile(unit.cords);
 
-                    //Check player's cords
-                    if (pathList[i].cords == new Vector2Int((int)player.transform.position.x, (int)player.transform.position.z))
+                    for (int i = 0; i < unit.moveDistance; i++)
                     {
-                        //pathList.RemoveAt(i);
+                        gridManager.ReleaseTile(unit.cords);
+
+                        //Check player's cords
+                        if (pathList[i].cords == new Vector2Int((int)player.transform.position.x, (int)player.transform.position.z))
+                        {
+                            //pathList.RemoveAt(i);
+                            gridManager.BlockTile(unit.cords);
+                            break;
+                        }
+                        float travelPercent = 0f;
+
+                        while (travelPercent < 1f)
+                        {
+                            travelPercent += Time.deltaTime * movementSpeed;
+                            unit.unitGameObject.transform.position = Vector3.MoveTowards(unit.unitGameObject.transform.position, new Vector3(pathList[i].transform.position.x, unit.unitGameObject.transform.position.y, pathList[i].transform.position.z), travelPercent);
+                            yield return new WaitForEndOfFrame();
+
+                        }
+                        //PositionUnitOnTile(unit, i);
+                        unit.unitGameObject.transform.LookAt(new Vector3(pathList[i].transform.position.x, unit.unitGameObject.transform.position.y, pathList[i].transform.position.z));
+
+                        unit.cords = pathList[i].cords;
                         gridManager.BlockTile(unit.cords);
-                        break;
                     }
-                    float travelPercent = 0f;
 
-                    while (travelPercent < 1f)
-                    {
-                        travelPercent += Time.deltaTime * movementSpeed;
-                        unit.unitGameObject.transform.position = Vector3.MoveTowards(unit.unitGameObject.transform.position, new Vector3(pathList[i].transform.position.x, unit.unitGameObject.transform.position.y, pathList[i].transform.position.z), travelPercent);
-                        yield return new WaitForEndOfFrame();
-
-                    }
-                    //PositionUnitOnTile(unit, i);
-                    unit.unitGameObject.transform.LookAt(new Vector3(pathList[i].transform.position.x, unit.unitGameObject.transform.position.y, pathList[i].transform.position.z));
-
-                    unit.cords = pathList[i].cords;
-                    gridManager.BlockTile(unit.cords);
                 }
 
+                AttackPlayerMelee(unit);
             }
-
-            AttackPlayerMelee(unit);
+            
         }
 
-        cardManager.StartTurnCardsInHand();
+        if (!isDefeated)
+        {
+            cardManager.StartTurnCardsInHand();
+        }
+        
     }
 
     private void PositionUnitOnTile(Unit unit, int pathIndex)
