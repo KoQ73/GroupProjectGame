@@ -14,6 +14,8 @@ public class CardManager : MonoBehaviour
     List<Card> discardPile;
     List<Card> cardsInHand;
 
+    public List<Card> availableCards;
+
     GameObject clickedCard;
     bool movementCardUsed;
     int totalEnergy;
@@ -24,6 +26,10 @@ public class CardManager : MonoBehaviour
     GameObject confirmationUI;
     GameObject confirmBtn;
     GameObject cancelBtn;
+    GameObject deckAndEnergyContainer;
+    GameObject energyNumber;
+    GameObject showDeckCount;
+    GameObject showDiscardCount;
 
     PlayerController playerController;
 
@@ -36,6 +42,10 @@ public class CardManager : MonoBehaviour
         confirmationUI = GameObject.Find("ConfirmationDisplay");
         confirmBtn = GameObject.Find("ConfirmationBtn");
         cancelBtn = GameObject.Find("CancelBtn");
+        deckAndEnergyContainer = GameObject.Find("DeckAndEnergyNumbers");
+        energyNumber = GameObject.Find("EnergyNumber");
+        showDeckCount = GameObject.Find("DeckNumber");
+        showDiscardCount = GameObject.Find("DiscardNumber");
 
         cardImageUI.SetActive(false);
         confirmationUI.SetActive(false);
@@ -47,8 +57,11 @@ public class CardManager : MonoBehaviour
         deckPile = new List<Card>();
         discardPile = new List<Card>();
         cardsInHand = new List<Card>();
+        availableCards = new List<Card>();
 
         playerController = FindObjectOfType<PlayerController>();
+
+
 
         PopulateDefaultDeck();
         ShuffleDeck();
@@ -59,6 +72,18 @@ public class CardManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void DeckAndEnergyNumberUpdate()
+    {
+        energyNumber.GetComponent<TextMeshProUGUI>().text = totalEnergy.ToString();
+        showDeckCount.GetComponent<TextMeshProUGUI>().text = deckPile.Count.ToString();
+        showDiscardCount.GetComponent<TextMeshProUGUI>().text = discardPile.Count.ToString();
+    }
+
+    private void CardsInGame()
+    {
+        //Basic Attack Card
     }
 
     private void PopulateDefaultDeck()
@@ -105,6 +130,7 @@ public class CardManager : MonoBehaviour
 
         cardContainer.SetActive(true);
         endTurnBtn.SetActive(true);
+        deckAndEnergyContainer.SetActive(true);
 
         totalEnergy = 3;
 
@@ -176,6 +202,9 @@ public class CardManager : MonoBehaviour
             cardsInHand.Add(targetCardVariables);
             deckPile.RemoveAt(0);
         }
+
+        //Update Deck and Energy numbers
+        DeckAndEnergyNumberUpdate();
     }
 
     private void ShowRemaindingCards()
@@ -239,7 +268,10 @@ public class CardManager : MonoBehaviour
                 }
             }
         }
-        
+
+        //Update Deck and Energy numbers
+        DeckAndEnergyNumberUpdate();
+
     }
 
     //function for testing card usage
@@ -265,6 +297,7 @@ public class CardManager : MonoBehaviour
             confirmationUI.SetActive(true);
             cardContainer.SetActive(false);
             endTurnBtn.SetActive(false);
+            deckAndEnergyContainer.SetActive(false);
         }
         
     }
@@ -275,6 +308,7 @@ public class CardManager : MonoBehaviour
         confirmationUI.SetActive(false);
         cardContainer.SetActive(true);
         endTurnBtn.SetActive(true);
+        deckAndEnergyContainer.SetActive(true);
         ShowRemaindingCards();
     }
 
@@ -293,6 +327,7 @@ public class CardManager : MonoBehaviour
     {
         cardContainer.SetActive(false);
         endTurnBtn.SetActive(false);
+        deckAndEnergyContainer.SetActive(false);
     }
 
     private void DeactivateMoveCard()
