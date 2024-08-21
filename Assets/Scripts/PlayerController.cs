@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using static UnityEngine.UI.CanvasScaler;
@@ -12,7 +13,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] float movementSpeed = 2f;
     [SerializeField] int moveDistance = 2;
-    public int playerHealth = 10;
+    public int playerHealth = 1000;
+    public int shield = 0;
 
     [SerializeField] Material movableTile;
     [SerializeField] Material inactiveTile;
@@ -202,17 +204,69 @@ public class PlayerController : MonoBehaviour
     public void DealAttack(int dmg){
         // Check which unit is selected
         List<Unit> units = FindObjectOfType<UnitController>().Units;
-        
-        foreach (Unit unit in units)
+
+        // Check which units to destroy
+        List<int> toDestroy = new List<int>();
+
+        for (int i = 0; i < units.Count; i++)
         {
-            if (unit.cords == selectedLocation) {
-                UnityEngine.Debug.Log("Health before: " + unit.health);
-                unit.health -= dmg;
-                UnityEngine.Debug.Log("Health after: " + unit.health);
+            Unit u = units[i];
+            if (u.cords == selectedLocation)
+            {
+                u.health -= dmg;
+                // if health after is zero or less than zero, add it to toDestroy List
+                if (u.health <= 0)
+                {
+                    toDestroy.Add(i);
+                }
                 break;
             }
         }
+
+        foreach(int i  in toDestroy)
+        {
+            Unit u = units[i];
+            // Destroy the gameObject
+            Destroy(u.unitGameObject, 1);
+            // Release the tile
+            gridManager.ReleaseTile(u.cords);
+            // Remove in array
+            units.RemoveAt(i);
+        }
+
+        // Find UnitController and make isDefeated true
+        UnityEngine.Debug.Log(units.Count);
+        if (units.Count <= 0)
+        {
+            UnitController unitController = FindObjectOfType<UnitController>();
+            unitController.EnemyCleared = true;
+            // Ben's function for reward UI
+            UnityEngine.Debug.Log("Enemies are defeated");
+                // Change the flag to not defeated
+                unitController.EnemyCleared = false;
+            
+        }
     }
+
+    // Attack
+    public void ShieldCard()
+    {
+        
+    }
+
+    // Confirm
+    public void ConfirmShieldCard()
+    {
+        // increase player health for one round
+    }
+
+    // Cancel
+    public void CancelShieldCard()
+    {
+        // decrease player health after one round
+        
+    }
+
     private void GetInRangeTiles()
     {
         movableCords.Clear();

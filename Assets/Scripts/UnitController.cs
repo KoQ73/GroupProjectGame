@@ -12,11 +12,18 @@ public class UnitController : MonoBehaviour
 
     Unit selectedUnit;
     bool isDefeated;
+    bool enemyCleared;
 
     List<Unit> units = new List<Unit>();
     List<Unit> obstacles = new List<Unit>();
 
     public List<Unit> Units { get { return units; } }
+
+    public bool EnemyCleared
+    {
+        get { return enemyCleared; }
+        set { enemyCleared = value; }
+    }
 
     List<Tile> pathList = new List<Tile>();
 
@@ -209,6 +216,8 @@ public class UnitController : MonoBehaviour
                 }
 
                 AttackPlayerMelee(unit);
+                // update the player shield to zero after enemy finished attacking
+                playerController.shield = 0;
             }
             
         }
@@ -217,7 +226,6 @@ public class UnitController : MonoBehaviour
         {
             cardManager.StartTurnCardsInHand();
         }
-        
     }
 
     private void PositionUnitOnTile(Unit unit, int pathIndex)
