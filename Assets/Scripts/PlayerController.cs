@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private List<Tile> pathList = new List<Tile>();
     private List<Tile> inRangeTiles = new List<Tile>();
 
-    Transform selectedUnit;
+    public Transform selectedUnit;
     List<Vector2Int> movableCords;
     List<Vector2Int> attackableCords;
 

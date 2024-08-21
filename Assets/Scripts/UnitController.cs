@@ -35,8 +35,8 @@ public class UnitController : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         isDefeated = false;
 
-        PopulateObstacles();
-        PopulateUnits();
+        PopulateObstacles(4);
+        PopulateUnits(5);
     }
 
     // Update is called once per frame
@@ -45,11 +45,11 @@ public class UnitController : MonoBehaviour
 
     }
 
-    private void PopulateObstacles()
+    public void PopulateObstacles(int number)
     {
         obstacles.Clear();
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < number; i++)
         {
             Vector2Int obstacleCords = new Vector2Int();
             bool cordsTaken = true;
@@ -67,7 +67,7 @@ public class UnitController : MonoBehaviour
         }
     }
 
-    private void PopulateUnits()
+    public void PopulateUnits(int number)
     {
         units.Clear();
 

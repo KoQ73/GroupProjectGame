@@ -111,6 +111,22 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public void ResetTiles()
+    {
+        for (int x = 0; x < gridSize.x; x++)
+        {
+            for (int y = 0; y < gridSize.y; y++)
+            {
+                Vector2Int cords = new Vector2Int(x, y);
+
+                if (tileMap.ContainsKey(cords))
+                {
+                    tileMap[cords].isBlocked = false;
+                }
+            }
+        }
+    }
+
     private void CreateTile()
     {
         tileMap.Clear();

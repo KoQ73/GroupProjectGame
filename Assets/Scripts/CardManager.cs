@@ -132,7 +132,7 @@ public class CardManager : MonoBehaviour
         {
 
             
-            if (deckPile.Count <= 0)
+            if (deckPile.Count <= 0 && discardPile.Count > 0)
             {
                 //Debug.Log("Reached shuffle discard pile");
                 //Debug.Log(deckPile.Count);
