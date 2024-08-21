@@ -8,7 +8,10 @@ public class CardManager : MonoBehaviour
 {
     [SerializeField] Sprite basicAttackImage;
     [SerializeField] Sprite basicBlockImage;
-    [SerializeField] Sprite moveImage; 
+    [SerializeField] Sprite moveImage;
+    [SerializeField] Sprite healImage;
+    [SerializeField] Sprite circularAttackImage;
+    [SerializeField] Sprite executeImage;
 
     List<Card> deckPile;
     List<Card> discardPile;
@@ -61,8 +64,7 @@ public class CardManager : MonoBehaviour
 
         playerController = FindObjectOfType<PlayerController>();
 
-
-
+        CardsInGame();
         PopulateDefaultDeck();
         ShuffleDeck();
         StartTurnCardsInHand();
@@ -83,33 +85,69 @@ public class CardManager : MonoBehaviour
 
     private void CardsInGame()
     {
-        //Basic Attack Card
+        //Basic Attack Card [0]
+        int energyCost = 1;
+        int cardValue = 4;
+        int moveValue = 0;
+        string cardName = "Basic Attack";
+        string cardDescription = "Deal " + cardValue + " damage 1 space forward";
+        Card basicAttackCard = new Card(energyCost, cardValue, moveValue, cardName, cardDescription, basicAttackImage);
+
+        availableCards.Add(basicAttackCard);
+
+        //Basic Block Card [1]
+        energyCost = 1;
+        cardValue = 4;
+        moveValue = 0;
+        cardName = "Basic Block";
+        cardDescription = "Block " + cardValue + " damage";
+        Card basicBlockCard = new Card(energyCost, cardValue, moveValue, cardName, cardDescription, basicBlockImage);
+
+        availableCards.Add(basicBlockCard);
+
+        //Heal Card [2]
+        energyCost = 3;
+        cardValue = 10;
+        moveValue = 0;
+        cardName = "Heal";
+        cardDescription = "Heal " + cardValue;
+        Card healCard = new Card(energyCost, cardValue, moveValue, cardName, cardDescription, healImage);
+
+        availableCards.Add(healCard);
+
+        //Circular Attack Card [3]
+        energyCost = 2;
+        cardValue = 3;
+        moveValue = 0;
+        cardName = "Circular Attack";
+        cardDescription = "Deal " + cardValue + " damage around";
+        Card circularAttackCard = new Card(energyCost, cardValue, moveValue, cardName, cardDescription, circularAttackImage);
+
+        availableCards.Add(circularAttackCard);
+
+        //Execute Card [4]
+        energyCost = 3;
+        cardValue = 2;
+        moveValue = 0;
+        cardName = "Execute";
+        cardDescription = "Deal " + cardValue + " damage\nIf target > 30%, it immediately dies";
+        Card executeCard = new Card(energyCost, cardValue, moveValue, cardName, cardDescription, executeImage);
+
+        availableCards.Add(executeCard);
     }
 
     private void PopulateDefaultDeck()
     {
+        //Add Basic Attack Cards
         for (int i = 0; i < 3; i++)
         {
-            int energyCost = 1;
-            int cardValue = 4;
-            int moveValue = 0;
-            string cardName = "Basic Attack";
-            string cardDescription = "Deal " + cardValue + " damage 1 space forward";
-            Card basicAttackCard = new Card(energyCost, cardValue, moveValue, cardName, cardDescription, basicAttackImage);
-
-            deckPile.Add(basicAttackCard);
+            deckPile.Add(availableCards[0]);
         }
 
+        //Add Basic Block Cards
         for (int i = 0; i < 3; i++)
         {
-            int energyCost = 1;
-            int cardValue = 4;
-            int moveValue = 0;
-            string cardName = "Basic Block";
-            string cardDescription = "Block " + cardValue + " damage";
-            Card basicBlockCard = new Card(energyCost, cardValue, moveValue, cardName, cardDescription, basicBlockImage);
-
-            deckPile.Add(basicBlockCard);
+            deckPile.Add(availableCards[1]);
         }
     }
 

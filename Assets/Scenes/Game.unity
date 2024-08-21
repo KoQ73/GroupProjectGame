@@ -5838,6 +5838,10 @@ MonoBehaviour:
   basicAttackImage: {fileID: 21300000, guid: 37c7cc159aaa5a24083d5a0ec7d6b022, type: 3}
   basicBlockImage: {fileID: 21300000, guid: d6b698548854f4e46859ea20c4ee0852, type: 3}
   moveImage: {fileID: 21300000, guid: e8792f48ff1952f49850ba6bc7a2bfd2, type: 3}
+  healImage: {fileID: 21300000, guid: b2b1dcb5eeef6e0469d60f90cfdfdde9, type: 3}
+  circularAttackImage: {fileID: 21300000, guid: c2fac484d86b3c84388cbe48e41c557c,
+    type: 3}
+  executeImage: {fileID: 21300000, guid: 5c2b6b11b6a6e0e4b8605eae574d65a7, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
