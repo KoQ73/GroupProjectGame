@@ -12,18 +12,18 @@ public class UnitController : MonoBehaviour
 
     Unit selectedUnit;
     bool isDefeated;
-    bool enemyCleared;
+    //bool enemyCleared;
 
     List<Unit> units = new List<Unit>();
     List<Unit> obstacles = new List<Unit>();
 
     public List<Unit> Units { get { return units; } }
 
-    public bool EnemyCleared
+    /*public bool EnemyCleared
     {
         get { return enemyCleared; }
         set { enemyCleared = value; }
-    }
+    }*/
 
     List<Tile> pathList = new List<Tile>();
 
@@ -54,7 +54,15 @@ public class UnitController : MonoBehaviour
 
     public void PopulateObstacles(int number)
     {
-        obstacles.Clear();
+        //Removes each obstacle currently in the list if any
+        foreach (Unit obstacle in obstacles)
+        {
+            Destroy(obstacle.unitGameObject);
+            gridManager.ReleaseTile(obstacle.cords);
+            obstacles.Remove(obstacle);
+        }
+
+        //obstacles.Clear();
 
         for (int i = 0; i < number; i++)
         {
@@ -76,9 +84,17 @@ public class UnitController : MonoBehaviour
 
     public void PopulateUnits(int number)
     {
-        units.Clear();
+        //Removes each unit currently in the list if any
+        foreach (Unit unit in units)
+        {
+            Destroy(unit.unitGameObject);
+            gridManager.ReleaseTile(unit.cords);
+            units.Remove(unit);
+        }
 
-        for (int i = 0; i < 5; i++)
+        //units.Clear();
+
+        for (int i = 0; i < number; i++)
         {
             Vector2Int unitCords = new Vector2Int();
             bool cordsTaken = true;

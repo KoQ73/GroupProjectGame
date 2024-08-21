@@ -231,19 +231,22 @@ public class PlayerController : MonoBehaviour
             // Release the tile
             gridManager.ReleaseTile(u.cords);
             // Remove in array
-            units.RemoveAt(i);
+            //units.RemoveAt(i);
+            units.Remove(u);
         }
 
         // Find UnitController and make isDefeated true
         UnityEngine.Debug.Log(units.Count);
         if (units.Count <= 0)
         {
-            UnitController unitController = FindObjectOfType<UnitController>();
-            unitController.EnemyCleared = true;
+            //UnitController unitController = FindObjectOfType<UnitController>();
+            //unitController.EnemyCleared = true;
             // Ben's function for reward UI
-            UnityEngine.Debug.Log("Enemies are defeated");
-                // Change the flag to not defeated
-                unitController.EnemyCleared = false;
+            //UnityEngine.Debug.Log("Enemies are defeated");
+            // Change the flag to not defeated
+            //unitController.EnemyCleared = false;
+            
+            //Ben write ur function to activate RewardUI below this line
             
         }
     }
