@@ -17,7 +17,8 @@ public class CardManager : MonoBehaviour
     List<Card> discardPile;
     List<Card> cardsInHand;
 
-    public List<Card> availableCards;
+    List<Card> availableCards;
+    public List<Card> AvailableCards { get { return availableCards; } }
 
     GameObject clickedCard;
     bool movementCardUsed;

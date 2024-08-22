@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
     PathFinderA pathFinder;
     private RangeFinder rangeFinder;
 
-    public GameObject RewardUI;  // Reference to the Reward UI GameObject
+    //public GameObject RewardUI;  // Reference to the Reward UI GameObject
     private RandomCardReward RandomCardReward;
 
     // Start is called before the first frame update
@@ -73,10 +73,7 @@ public class PlayerController : MonoBehaviour
         shieldSlider.value = shield;
         shieldText.text = shield.ToString();
 
-
-
-        RandomCardReward = RewardUI.GetComponent<RandomCardReward>();
-        RewardUI.SetActive(false);
+        RandomCardReward = FindObjectOfType<RandomCardReward>();
     }
 
     // Update is called once per frame
@@ -434,7 +431,7 @@ public class PlayerController : MonoBehaviour
         List<Unit> units = FindObjectOfType<UnitController>().Units;
         if (units.Count <= 0)
         {
-            RewardUI.SetActive(true);
+            
             RandomCardReward.AssignRandomCards();
         }
     }
