@@ -39,6 +39,9 @@ public class PlayerController : MonoBehaviour
     PathFinderA pathFinder;
     private RangeFinder rangeFinder;
 
+    public GameObject RewardUI;  // Reference to the Reward UI GameObject
+    private RandomCardReward RandomCardReward;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -56,6 +59,9 @@ public class PlayerController : MonoBehaviour
 
         maxPlayerHealth = 10;
         playerHealth = maxPlayerHealth;
+
+        RandomCardReward = RewardUI.GetComponent<RandomCardReward>();
+        RewardUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -407,8 +413,8 @@ public class PlayerController : MonoBehaviour
         List<Unit> units = FindObjectOfType<UnitController>().Units;
         if (units.Count <= 0)
         {
-            // Do ur thing ben
-            UnityEngine.Debug.Log("Win");
+            RewardUI.SetActive(true);
+            RandomCardReward.AssignRandomCards();
         }
     }
 

@@ -13,15 +13,6 @@ public class RandomCardReward : MonoBehaviour
     {
         // Find the CardManager in the scene
         cardManager = FindObjectOfType<CardManager>();
-
-        if (cardManager != null)
-        {
-            AssignRandomCards();
-        }
-        else
-        {
-            Debug.LogError("CardManager not found!");
-        }
     }
 
     public void AssignRandomCards()
