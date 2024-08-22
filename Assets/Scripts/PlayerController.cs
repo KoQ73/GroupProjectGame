@@ -129,6 +129,18 @@ public class PlayerController : MonoBehaviour
         {
             ConfirmSlashAttackCard(4);
         }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            ExecuteCard();
+        }
+        if (Input.GetKeyDown(KeyCode.Equals))
+        {
+            ConfirmExecuteCard(1,4);
+        }
+        if (Input.GetKeyDown(KeyCode.RightShift))
+        {
+            CancelExecuteCard();
+        }
     }
 
     private void MoveAlongPath()
@@ -326,6 +338,64 @@ public class PlayerController : MonoBehaviour
             units.Remove(u);
         }
 
+        UnityEngine.Debug.Log(units.Count);
+        checkLevelOver();
+    }
+
+    private void ExecuteCard(){
+        PopulateAttackArea("Basic");
+        EnableAttackableTiles();
+        isAttacking = true;
+    }
+    private void ConfirmExecuteCard(int dmg, int threshold){
+        DisableAttackableTiles();
+        Execute(dmg, threshold);
+        isAttacking = false;
+    }
+    private void CancelExecuteCard(){
+        DisableAttackableTiles();
+        isAttacking = false;
+
+    }
+
+    public void Execute(int dmg, int threshold){
+        // Check which unit is selected
+        List<Unit> units = FindObjectOfType<UnitController>().Units;
+
+        // Check which units to destroy
+        List<Unit> toDestroy = new List<Unit>();
+
+        for (int i = 0; i < units.Count; i++)
+        {
+            Unit u = units[i];
+            if (u.cords == selectedLocation)
+            {
+                if(u.health<= threshold){
+                    toDestroy.Add(u);
+                }
+                else{
+                    u.health -= dmg;
+                }
+                // if health after is zero or less than zero, add it to toDestroy List
+                if (u.health <= 0)
+                {
+                    toDestroy.Add(u);
+                }
+                break;
+            }
+        }
+
+        foreach(Unit u  in toDestroy)
+        {
+            // Destroy the gameObject
+            Destroy(u.unitGameObject, 1);
+            // Release the tile
+            gridManager.ReleaseTile(u.cords);
+            // Remove in array
+            units.Remove(u);
+        }
+
+        // Find UnitController and make isDefeated true
         UnityEngine.Debug.Log(units.Count);
         checkLevelOver();
     }
