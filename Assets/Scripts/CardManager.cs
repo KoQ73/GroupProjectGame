@@ -337,6 +337,11 @@ public class CardManager : MonoBehaviour
             targetCard.GetComponent<Button>().onClick.AddListener(delegate { SetListenerToConfirmation(targetCardVariables.energyCost); });
             targetCard.GetComponent<Button>().onClick.AddListener(delegate { CircularAttackConfirmCancelImage(targetCardVariables); });
         }
+        else if (targetCardVariables.cardName == "Execute")
+        {
+            targetCard.GetComponent<Button>().onClick.AddListener(delegate { SetListenerToConfirmation(targetCardVariables.energyCost); });
+            targetCard.GetComponent<Button>().onClick.AddListener(delegate { ExecuteConfirmCancelImage(targetCardVariables); });
+        }
         else
         {
             targetCard.GetComponent<Button>().onClick.AddListener(delegate { DeleteCard(targetCardVariables); });
@@ -519,26 +524,26 @@ public class CardManager : MonoBehaviour
 
     }
 
-    /*private void ExecuteConfirmCancelImage(Card card)
+    private void ExecuteConfirmCancelImage(Card card)
     {
         if (totalEnergy >= card.energyCost)
         {
             confirmBtn.GetComponent<Button>().onClick.RemoveAllListeners();
             cancelBtn.GetComponent<Button>().onClick.RemoveAllListeners();
 
-            confirmBtn.GetComponent<Button>().onClick.AddListener(delegate { playerController.ConfirmSlashAttackCard(card.cardValue); });
+            confirmBtn.GetComponent<Button>().onClick.AddListener(delegate { playerController.ConfirmExecuteCard(card.cardValue); });
             confirmBtn.GetComponent<Button>().onClick.AddListener(delegate { DeleteCard(card); });
             confirmBtn.GetComponent<Button>().onClick.AddListener(BackToCards);
             //confirmBtn.GetComponent<Button>().onClick.AddListener(DeactivateMoveCard);
-            cancelBtn.GetComponent<Button>().onClick.AddListener(playerController.CancelSlashAttackCard);
+            cancelBtn.GetComponent<Button>().onClick.AddListener(playerController.CancelExecuteCard);
             cancelBtn.GetComponent<Button>().onClick.AddListener(BackToCards);
 
             cardImageUI.GetComponent<Image>().sprite = card.cardSprite;
             cardImageUI.transform.Find("CardDescription").gameObject.GetComponent<TextMeshProUGUI>().text = card.cardDescription;
             cardImageUI.transform.Find("EnergyCost").gameObject.GetComponent<TextMeshProUGUI>().text = card.energyCost.ToString();
 
-            playerController.E();
+            playerController.ExecuteCard();
         }
 
-    }*/
+    }
 }
