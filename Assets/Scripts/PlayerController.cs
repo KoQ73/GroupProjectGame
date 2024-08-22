@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            HealCard();
+            HealCard(2);
         }
         if (Input.GetKeyDown(KeyCode.Return))
         {
@@ -260,10 +260,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ShieldCard()
+    public void ShieldCard(int s)
     {
         // add shield
-        shield += 4;
+        shield += s;
     }
 
     public void ConfirmShieldCard()
@@ -272,13 +272,13 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    public void CancelShieldCard()
+    public void CancelShieldCard(int s)
     {
         // decrease player health after one round
-        shield -= 4;
+        shield -= s;
     }
 
-    public void HealCard()
+    public void HealCard(int h)
     {
         currentHealth = playerHealth;
         if (playerHealth >= maxPlayerHealth)
@@ -288,7 +288,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             // can heal any amount you want, now it is 2
-            playerHealth += 2;
+            playerHealth += h;
 
             if (playerHealth > maxPlayerHealth)
             {
