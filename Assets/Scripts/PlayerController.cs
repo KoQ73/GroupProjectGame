@@ -117,6 +117,18 @@ public class PlayerController : MonoBehaviour
         {
             CancelHealCard();
         }
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            SlashAttackCard();
+        }
+        if (Input.GetKeyDown(KeyCode.Comma))
+        {
+            CancelSlashAttackCard();
+        }
+        if (Input.GetKeyDown(KeyCode.CapsLock))
+        {
+            ConfirmSlashAttackCard(4);
+        }
     }
 
     private void MoveAlongPath()
@@ -246,17 +258,85 @@ public class PlayerController : MonoBehaviour
 
         // Find UnitController and make isDefeated true
         UnityEngine.Debug.Log(units.Count);
+        checkLevelOver();
+    }
+
+    public void SlashAttackCard()
+    {
+        PopulateAttackArea("Basic");
+        EnableAttackableTiles();
+    }
+
+    public void ConfirmSlashAttackCard(int dmg)
+    {
+        DisableAttackableTiles();
+        DealSlashAttack(dmg);
+    }
+
+    public void CancelSlashAttackCard()
+    {
+        DisableAttackableTiles();
+    }
+
+    private Unit EnemyExist(Vector2Int unitCords)
+    {
+        List<Unit> units = FindObjectOfType<UnitController>().Units;
+
+        foreach (Unit unit in units)
+        {
+            if (unit.cords == unitCords)
+            {
+                return unit;
+            }
+        }
+        return null;
+    }
+
+    public void DealSlashAttack(int dmg)
+    {
+        List<Unit> units = FindObjectOfType<UnitController>().Units;
+
+        // Check which units to destroy
+        List<Unit> toDestroy = new List<Unit>();
+
+        // Loop the attackable cords
+        foreach (Vector2Int a in attackableCords)
+        {
+            // Check if there is enemy in the cords
+            Unit u = EnemyExist(a);
+            if (u != null)
+            {
+                u.health -= dmg;
+                // if health after is zero or less than zero, add it to toDestroy List
+                if (u.health <= 0)
+                {
+                    toDestroy.Add(u);
+                }
+            }
+        }
+
+        // Destroy unit gameObjects and remove it from the list of units
+        foreach (Unit u in toDestroy)
+        {
+            // Destroy the gameObject
+            Destroy(u.unitGameObject, 1);
+            // Release the tile
+            gridManager.ReleaseTile(u.cords);
+            // Remove in array
+            units.Remove(u);
+        }
+
+        UnityEngine.Debug.Log(units.Count);
+        checkLevelOver();
+    }
+
+    private void checkLevelOver()
+    {
+        List<Unit> units = FindObjectOfType<UnitController>().Units;
         if (units.Count <= 0)
         {
-            //UnitController unitController = FindObjectOfType<UnitController>();
-            //unitController.EnemyCleared = true;
-            // Ben's function for reward UI
-            //UnityEngine.Debug.Log("Enemies are defeated");
-            // Change the flag to not defeated
-            //unitController.EnemyCleared = false;
-            
-            //Ben write ur function to activate RewardUI below this line
-            
+            // Do ur thing ben
+            UnityEngine.Debug.Log("Win");
         }
     }
 
