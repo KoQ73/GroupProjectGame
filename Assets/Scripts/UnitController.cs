@@ -78,7 +78,7 @@ public class UnitController : MonoBehaviour
 
             GameObject gameObject = (GameObject)Instantiate(obstacleObject, new Vector3(obstacleCords.x, 0.35f, obstacleCords.y), Quaternion.identity);
             gridManager.BlockTile(obstacleCords);
-            obstacles.Add(new Unit(obstacleCords, 0, 0, 5, 0, "Null", gameObject));
+            obstacles.Add(new Unit(obstacleCords, 0, 0, 5, 5, 0, "Null", gameObject));
         }
     }
 
@@ -108,7 +108,7 @@ public class UnitController : MonoBehaviour
 
             GameObject gameObject = (GameObject)Instantiate(unitObject, new Vector3(unitCords.x, 0.55f, unitCords.y), Quaternion.identity);
             gridManager.BlockTile(unitCords);
-            units.Add(new Unit(unitCords, 2, movementSpeed, 5, 2, "Basic", gameObject));
+            units.Add(new Unit(unitCords, 2, movementSpeed, 5, 5, 2, "Basic", gameObject));
         }
     }
 
