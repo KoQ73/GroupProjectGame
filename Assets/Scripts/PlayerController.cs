@@ -135,7 +135,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Equals))
         {
-            ConfirmExecuteCard(1,4);
+            ConfirmExecuteCard(1);
         }
         if (Input.GetKeyDown(KeyCode.RightShift))
         {
@@ -347,9 +347,9 @@ public class PlayerController : MonoBehaviour
         EnableAttackableTiles();
         isAttacking = true;
     }
-    public void ConfirmExecuteCard(int dmg, int threshold){
+    public void ConfirmExecuteCard(int dmg){
         DisableAttackableTiles();
-        Execute(dmg, threshold);
+        Execute(dmg);
         isAttacking = false;
     }
     public void CancelExecuteCard(){
@@ -358,7 +358,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void Execute(int dmg, int threshold){
+    public void Execute(int dmg){
         // Check which unit is selected
         List<Unit> units = FindObjectOfType<UnitController>().Units;
 
@@ -368,6 +368,8 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < units.Count; i++)
         {
             Unit u = units[i];
+            float threshold = u.maxHealth * 0.1f;
+
             if (u.cords == selectedLocation)
             {
                 if(u.health<= threshold){
@@ -419,7 +421,7 @@ public class PlayerController : MonoBehaviour
     public void ConfirmShieldCard()
     {
         // increase player health for one round
-        
+        // UnityEngine.Debug.Log("shield:"+shield);
     }
 
     public void CancelShieldCard(int s)
