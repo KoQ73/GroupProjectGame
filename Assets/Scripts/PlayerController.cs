@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using TMPro;
 using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.UI;
 using static UnityEngine.UI.CanvasScaler;
 
 public class PlayerController : MonoBehaviour
@@ -16,6 +18,12 @@ public class PlayerController : MonoBehaviour
     public int playerHealth;
     public int shield = 0;
     public int maxPlayerHealth;
+    public Slider hpSlider;
+    public Slider shieldSlider;
+
+    public TextMeshProUGUI hpText;
+    public TextMeshProUGUI shieldText;
+
     private int currentHealth;
 
     [SerializeField] Material movableTile;
@@ -59,6 +67,13 @@ public class PlayerController : MonoBehaviour
 
         maxPlayerHealth = 10;
         playerHealth = maxPlayerHealth;
+        hpSlider.maxValue = maxPlayerHealth;
+        hpSlider.value = playerHealth;
+        hpText.text = playerHealth.ToString();
+        shieldSlider.value = shield;
+        shieldText.text = shield.ToString();
+
+
 
         RandomCardReward = RewardUI.GetComponent<RandomCardReward>();
         RewardUI.SetActive(false);
@@ -115,38 +130,44 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        hpSlider.value = playerHealth;
+        hpText.text = playerHealth.ToString();
+        int temp = shield;
+        temp = Mathf.Clamp(shield,0,12);
+        shieldSlider.value = shield;
+        shieldText.text = temp.ToString();
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            HealCard(2);
-        }
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            CancelHealCard();
-        }
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            SlashAttackCard();
-        }
-        if (Input.GetKeyDown(KeyCode.Comma))
-        {
-            CancelSlashAttackCard();
-        }
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            ConfirmSlashAttackCard(4);
-        }
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            ExecuteCard();
-        }
-        if (Input.GetKeyDown(KeyCode.Equals))
-        {
-            ConfirmExecuteCard(1);
-        }
-        if (Input.GetKeyDown(KeyCode.RightShift))
-        {
-            CancelExecuteCard();
-        }
+        // if (Input.GetKeyDown(KeyCode.Space)) {
+        //     HealCard(2);
+        // }
+        // if (Input.GetKeyDown(KeyCode.Return))
+        // {
+        //     CancelHealCard();
+        // }
+        // if (Input.GetKeyDown(KeyCode.LeftShift))
+        // {
+        //     SlashAttackCard();
+        // }
+        // if (Input.GetKeyDown(KeyCode.Comma))
+        // {
+        //     CancelSlashAttackCard();
+        // }
+        // if (Input.GetKeyDown(KeyCode.LeftControl))
+        // {
+        //     ConfirmSlashAttackCard(4);
+        // }
+        // if (Input.GetKeyDown(KeyCode.Tab))
+        // {
+        //     ExecuteCard();
+        // }
+        // if (Input.GetKeyDown(KeyCode.Equals))
+        // {
+        //     ConfirmExecuteCard(1);
+        // }
+        // if (Input.GetKeyDown(KeyCode.RightShift))
+        // {
+        //     CancelExecuteCard();
+        // }
     }
 
     private void MoveAlongPath()
@@ -422,12 +443,15 @@ public class PlayerController : MonoBehaviour
     {
         // add shield
         shield += s;
+        shieldSlider.maxValue = shield;
+
     }
 
     public void ConfirmShieldCard()
     {
         // increase player health for one round
         // UnityEngine.Debug.Log("shield:"+shield);
+
     }
 
     public void CancelShieldCard(int s)

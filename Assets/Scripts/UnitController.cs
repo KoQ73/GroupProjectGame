@@ -246,12 +246,13 @@ public class UnitController : MonoBehaviour
                 }
 
                 AttackPlayerMelee(unit);
-                // update the player shield to zero after enemy finished attacking
-                playerController.shield = 0;
+                
             }
             
         }
-
+        // update the player shield to zero after enemy finished attacking
+        playerController.shield = 0;
+        
         if (!isDefeated)
         {
             cardManager.StartTurnCardsInHand();
