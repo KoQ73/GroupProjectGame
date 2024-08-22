@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int moveDistance = 2;
     public int playerHealth;
     public int shield = 0;
+    public int maxPlayerHealth;
+    private int currentHealth;
 
     [SerializeField] Material movableTile;
     [SerializeField] Material inactiveTile;
@@ -52,6 +54,8 @@ public class PlayerController : MonoBehaviour
         currentLocation = new Vector2Int();
         selectedLocation = new Vector2Int();
 
+        maxPlayerHealth = 10;
+        playerHealth = maxPlayerHealth;
     }
 
     // Update is called once per frame
@@ -104,6 +108,14 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            HealCard();
+        }
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            CancelHealCard();
         }
     }
 
@@ -248,25 +260,52 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Attack
     public void ShieldCard()
     {
         // add shield
         shield += 4;
     }
 
-    // Confirm
     public void ConfirmShieldCard()
     {
         // increase player health for one round
         
     }
 
-    // Cancel
     public void CancelShieldCard()
     {
         // decrease player health after one round
         shield -= 4;
+    }
+
+    public void HealCard()
+    {
+        currentHealth = playerHealth;
+        if (playerHealth >= maxPlayerHealth)
+        {
+            return;
+        }
+        else
+        {
+            // can heal any amount you want, now it is 2
+            playerHealth += 2;
+
+            if (playerHealth > maxPlayerHealth)
+            {
+                playerHealth = maxPlayerHealth;
+            }
+        }
+    }
+
+    public void ConfirmHealCard()
+    {
+        // increase player health for one round
+
+    }
+
+    public void CancelHealCard()
+    {
+        playerHealth = currentHealth;
     }
 
     private void GetInRangeTiles()
