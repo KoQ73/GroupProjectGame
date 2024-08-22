@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
         {
             CancelSlashAttackCard();
         }
-        if (Input.GetKeyDown(KeyCode.CapsLock))
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             ConfirmSlashAttackCard(4);
         }
@@ -275,7 +275,7 @@ public class PlayerController : MonoBehaviour
 
     public void SlashAttackCard()
     {
-        PopulateAttackArea("Basic");
+        PopulateAttackArea("Slash");
         EnableAttackableTiles();
     }
 
@@ -342,17 +342,17 @@ public class PlayerController : MonoBehaviour
         checkLevelOver();
     }
 
-    private void ExecuteCard(){
+    public void ExecuteCard(){
         PopulateAttackArea("Basic");
         EnableAttackableTiles();
         isAttacking = true;
     }
-    private void ConfirmExecuteCard(int dmg, int threshold){
+    public void ConfirmExecuteCard(int dmg, int threshold){
         DisableAttackableTiles();
         Execute(dmg, threshold);
         isAttacking = false;
     }
-    private void CancelExecuteCard(){
+    public void CancelExecuteCard(){
         DisableAttackableTiles();
         isAttacking = false;
 
@@ -541,6 +541,25 @@ public class PlayerController : MonoBehaviour
             attackableCords.Add(new Vector2Int(xCord - 1, yCord));
             //Right
             attackableCords.Add(new Vector2Int(xCord + 1, yCord));
+        }
+        if (type == "Slash")
+        {
+            //Top
+            attackableCords.Add(new Vector2Int(xCord, yCord + 1));
+            //Bottom
+            attackableCords.Add(new Vector2Int(xCord, yCord - 1));
+            //Left
+            attackableCords.Add(new Vector2Int(xCord - 1, yCord));
+            //Right
+            attackableCords.Add(new Vector2Int(xCord + 1, yCord));
+            //Top-Right
+            attackableCords.Add(new Vector2Int(xCord + 1, yCord + 1));
+            //Top-Left
+            attackableCords.Add(new Vector2Int(xCord - 1, yCord + 1));
+            //Bottom-Right
+            attackableCords.Add(new Vector2Int(xCord + 1, yCord - 1));
+            //Bottom-Left
+            attackableCords.Add(new Vector2Int(xCord - 1, yCord - 1));        
         }
     }
 
