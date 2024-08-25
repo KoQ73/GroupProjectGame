@@ -11,9 +11,10 @@ public class Unit
     public int maxHealth;
     public int attackDmg;
     public string attackName;
+    public string unitName;
     public GameObject unitGameObject;
 
-    public Unit(Vector2Int cords, int moveDistance, float moveSpeed, int health, int maxHealth, int attackDmg, string attackName, GameObject unitGameObject)
+    public Unit(Vector2Int cords, int moveDistance, float moveSpeed, int health, int maxHealth, int attackDmg, string attackName, string unitName, GameObject unitGameObject)
     {
         this.cords = cords;
         this.moveDistance = moveDistance;
@@ -22,6 +23,7 @@ public class Unit
         this.maxHealth = maxHealth;
         this.attackDmg = attackDmg;
         this.attackName = attackName;
+        this.unitName = unitName;
         this.unitGameObject = unitGameObject;
     }
 

@@ -68,7 +68,7 @@ public class CardManager : MonoBehaviour
         CardsInGame();
         PopulateDefaultDeck();
         ShuffleDeck();
-        StartTurnCardsInHand();
+        //StartTurnCardsInHand();
     }
 
     // Update is called once per frame
@@ -198,12 +198,13 @@ public class CardManager : MonoBehaviour
             
             if (deckPile.Count <= 0 && discardPile.Count > 0)
             {
-                foreach (Card card in discardPile)
+                /*foreach (Card card in discardPile)
                 {
                     deckPile.Add(card);
                 }
 
-                discardPile.Clear();
+                discardPile.Clear();*/
+                ShuffleDiscardBack();
 
                 ShuffleDeck();
             }
@@ -237,6 +238,16 @@ public class CardManager : MonoBehaviour
 
         //Update Deck and Energy numbers
         DeckAndEnergyNumberUpdate();
+    }
+
+    public void ShuffleDiscardBack()
+    {
+        foreach (Card card in discardPile)
+        {
+            deckPile.Add(card);
+        }
+
+        discardPile.Clear();
     }
 
     private void ShowRemaindingCards()

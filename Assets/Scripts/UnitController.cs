@@ -7,6 +7,8 @@ public class UnitController : MonoBehaviour
 {
     [SerializeField] float movementSpeed = 0.5f;
     [SerializeField] GameObject unitObject;
+    [SerializeField] GameObject basicUnit;
+    [SerializeField] GameObject StrongerUnit;
     [SerializeField] GameObject obstacleObject;
     [SerializeField] GameObject loseScreen;
 
@@ -18,6 +20,9 @@ public class UnitController : MonoBehaviour
     List<Unit> obstacles = new List<Unit>();
 
     public List<Unit> Units { get { return units; } }
+
+    List<Unit> typesOfUnits = new List<Unit>();
+    public List <Unit> TypesOfUnits { get { return typesOfUnits; } }
 
     /*public bool EnemyCleared
     {
@@ -42,14 +47,25 @@ public class UnitController : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         isDefeated = false;
 
-        PopulateObstacles(4);
-        PopulateUnits(5);
+        PopulateTypesOfUnits();
+        //PopulateObstacles(4);
+        //PopulateUnits(5);
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public void PopulateTypesOfUnits()
+    {
+        typesOfUnits.Clear();
+        //Basic Enemy [0]
+        typesOfUnits.Add(new Unit(new Vector2Int(), 1, movementSpeed, 10, 10, 5, "Basic", "Basic Enemy", null));
+
+        //Stronger Enemy [1]
+        typesOfUnits.Add(new Unit(new Vector2Int(), 2, movementSpeed, 20, 20, 5, "Basic", "Stronger Enemy", null));
     }
 
     public void PopulateObstacles(int number)
@@ -78,11 +94,11 @@ public class UnitController : MonoBehaviour
 
             GameObject gameObject = (GameObject)Instantiate(obstacleObject, new Vector3(obstacleCords.x, 0.35f, obstacleCords.y), Quaternion.identity);
             gridManager.BlockTile(obstacleCords);
-            obstacles.Add(new Unit(obstacleCords, 0, 0, 5, 5, 0, "Null", gameObject));
+            obstacles.Add(new Unit(obstacleCords, 0, 0, 5, 5, 0, "Null", "Obstacle", gameObject));
         }
     }
 
-    public void PopulateUnits(int number)
+    public void PopulateUnits(int number, Unit selectedUnit)
     {
         //Removes each unit currently in the list if any
         foreach (Unit unit in units)
@@ -106,9 +122,21 @@ public class UnitController : MonoBehaviour
                 cordsTaken = coordsExist(unitCords);
             }
 
-            GameObject gameObject = (GameObject)Instantiate(unitObject, new Vector3(unitCords.x, 0.55f, unitCords.y), Quaternion.identity);
+            GameObject gameObject = new GameObject();
+
+            if (selectedUnit.unitName == "Basic Enemy")
+            {
+                gameObject = (GameObject)Instantiate(basicUnit, new Vector3(unitCords.x, 0.55f, unitCords.y), Quaternion.identity);
+            }
+            else if (selectedUnit.unitName == "Stronger Enemy")
+            {
+                gameObject = (GameObject)Instantiate(StrongerUnit, new Vector3(unitCords.x, 0.55f, unitCords.y), Quaternion.identity);
+            }
+
             gridManager.BlockTile(unitCords);
-            units.Add(new Unit(unitCords, 2, movementSpeed, 5, 5, 2, "Basic", gameObject));
+
+            //Add unit
+            units.Add(new Unit(unitCords, selectedUnit.moveDistance, movementSpeed, selectedUnit.health, selectedUnit.maxHealth, selectedUnit.attackDmg, selectedUnit.attackName, selectedUnit.unitName, gameObject));
         }
     }
 
