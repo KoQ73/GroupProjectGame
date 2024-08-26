@@ -13,8 +13,7 @@ public class CardManager : MonoBehaviour
     [SerializeField] Sprite circularAttackImage;
     [SerializeField] Sprite executeImage;
 
-    List<Card> deckPile;
-    public List<Card> DeckPile { get { return deckPile; } }
+    public List<Card> deckPile;
 
     List<Card> discardPile;
     List<Card> cardsInHand;
