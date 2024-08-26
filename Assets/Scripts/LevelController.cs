@@ -75,7 +75,7 @@ public class LevelController : MonoBehaviour
             playerDirection = "Left";
         }
 
-        //cardManager.ShuffleDiscardBack();
+        cardManager.resetDeck();
         cardManager.StartTurnCardsInHand();
         //Set units and obstacles
 
