@@ -336,5 +336,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3da87bae9893b514ba960f7b406ec56e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blocked: 0
   cords: {x: 0, y: 0}
+  G: 0
+  H: 0
+  isBlocked: 0
+  previous: {fileID: 0}
