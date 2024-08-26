@@ -6,7 +6,7 @@ using TMPro;
 
 public class VolumeSlider : MonoBehaviour
 {
-    public AudioManager audioManager
+    public AudioManager audioManager;
     public Slider slider;
     public TMP_Text volumeText;
 
