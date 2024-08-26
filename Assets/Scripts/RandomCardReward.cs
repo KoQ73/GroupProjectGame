@@ -96,42 +96,47 @@ public class RandomCardReward : MonoBehaviour
 
     private void SelectCard(int cardIndex)
     {
-        if (cardIndex == 1)
-        {
-            selectedCard = cardManager.AvailableCards.Find(card => card.cardSprite == cardReward1.GetComponent<Image>().sprite);
-            HighlightSelectedCard(cardReward1);
-            UnhighlightCard(cardReward2);
-        }
-        else if (cardIndex == 2)
-        {
-            selectedCard = cardManager.AvailableCards.Find(card => card.cardSprite == cardReward2.GetComponent<Image>().sprite);
-            HighlightSelectedCard(cardReward2);
-            UnhighlightCard(cardReward1);
-        }
-        Debug.Log("Selected Card: " + selectedCard.cardName);
+        GameObject cardObject = cardIndex == 1 ? cardReward1 : cardReward2;
+        Card card = cardIndex == 1
+            ? cardManager.AvailableCards.Find(c => c.cardSprite == cardReward1.GetComponent<Image>().sprite)
+            : cardManager.AvailableCards.Find(c => c.cardSprite == cardReward2.GetComponent<Image>().sprite);
 
+        if (selectedCard == card)
+        {
+            UnhighlightCard(cardObject);
+            selectedCard = null;
+        }
+        else
+        {
+            if (selectedCard != null)
+            {
+                UnhighlightCard(selectedCard == cardManager.AvailableCards.Find(c => c.cardSprite == cardReward1.GetComponent<Image>().sprite)
+                    ? cardReward1
+                    : cardReward2);
+            }
+
+            HighlightSelectedCard(cardObject);
+            selectedCard = card;
+        }
     }
+
 
 
     private void HighlightSelectedCard(GameObject cardObject)
     {
-        // Add your logic here to visually highlight the selected card
-        cardObject.GetComponent<Image>().color = Color.green; // Example of changing color
+        cardObject.GetComponent<Image>().color = Color.green;
     }
 
     private void UnhighlightCard(GameObject cardObject)
     {
-        // Add your logic here to revert the visual highlighting
-        cardObject.GetComponent<Image>().color = Color.white; // Revert back to original color
+        cardObject.GetComponent<Image>().color = Color.white;
     }
 
     public void ResetHighlights()
     {
-        // Reset the highlight color for both cardReward1 and cardReward2
         UnhighlightCard(cardReward1);
         UnhighlightCard(cardReward2);
 
-        // Clear the selected card
         selectedCard = null;
     }
 
