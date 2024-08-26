@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LevelController : MonoBehaviour
@@ -110,6 +111,10 @@ public class LevelController : MonoBehaviour
             unitController.PopulateObstacles(obstacleNumber);
             unitController.PopulateUnits(basicUnitNumber, typesOfEnemies[0]);
             unitController.PopulateUnits(strongerUnitNumber, typesOfEnemies[1]);
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
 
         StartCoroutine(FadeImage(true));
