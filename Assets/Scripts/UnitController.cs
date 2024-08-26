@@ -22,7 +22,7 @@ public class UnitController : MonoBehaviour
     public List<Unit> Units { get { return units; } }
 
     List<Unit> typesOfUnits = new List<Unit>();
-    public List <Unit> TypesOfUnits { get { return typesOfUnits; } }
+    public List<Unit> TypesOfUnits { get { return typesOfUnits; } }
 
     /*public bool EnemyCleared
     {
@@ -98,7 +98,7 @@ public class UnitController : MonoBehaviour
         }
     }
 
-    public void PopulateUnits(int number, Unit selectedUnit)
+    public void ClearAllUnits()
     {
         //Removes each unit currently in the list if any
         foreach (Unit unit in units)
@@ -107,6 +107,17 @@ public class UnitController : MonoBehaviour
             gridManager.ReleaseTile(unit.cords);
             units.Remove(unit);
         }
+    }
+
+    public void PopulateUnits(int number, Unit selectedUnit)
+    {
+        //Removes each unit currently in the list if any
+        /*foreach (Unit unit in units)
+        {
+            Destroy(unit.unitGameObject);
+            gridManager.ReleaseTile(unit.cords);
+            units.Remove(unit);
+        }*/
 
         //units.Clear();
 

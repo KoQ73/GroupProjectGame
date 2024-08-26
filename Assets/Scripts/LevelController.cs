@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelController : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class LevelController : MonoBehaviour
 
     Vector2Int playerPosition;
     string playerDirection;
+    [SerializeField] GameObject transitionPanel;
 
     PlayerController playerController;
     UnitController unitController;
@@ -36,13 +39,15 @@ public class LevelController : MonoBehaviour
         playerPosition = new Vector2Int(0, Mathf.FloorToInt(gridManager.GridSize.y/2));
 
         LoadLevel();
+
     }
 
     public void LoadNextLevel()
     {
         level++;
 
-        LoadLevel();
+        //LoadLevel();
+        StartCoroutine(FadeImage(false));
     }
 
     private void LoadLevel()
@@ -72,6 +77,8 @@ public class LevelController : MonoBehaviour
         cardManager.ShuffleDiscardBack();
         cardManager.StartTurnCardsInHand();
         //Set units and obstacles
+
+        unitController.ClearAllUnits();
 
         if (level == 1)
         {
@@ -104,5 +111,36 @@ public class LevelController : MonoBehaviour
             unitController.PopulateUnits(basicUnitNumber, typesOfEnemies[0]);
             unitController.PopulateUnits(strongerUnitNumber, typesOfEnemies[1]);
         }
+
+        StartCoroutine(FadeImage(true));
+    }
+
+    IEnumerator FadeImage(bool fadeAway)
+    {
+        // fade from opaque to transparent
+        if (fadeAway)
+        {
+            // loop over 1 second backwards
+            for (float i = 1; i >= 0; i -= Time.deltaTime)
+            {
+                // set color with i as alpha
+                transitionPanel.GetComponent<Image>().color = new Color(0, 0, 0, i);
+                yield return null;
+            }
+        }
+        // fade from transparent to opaque
+        else
+        {
+            // loop over 1 second
+            for (float i = 0; i <= 1; i += Time.deltaTime)
+            {
+                // set color with i as alpha
+                transitionPanel.GetComponent<Image>().color = new Color(0, 0, 0, i);
+                yield return null;
+            }
+
+            LoadLevel();
+        }
+
     }
 }
