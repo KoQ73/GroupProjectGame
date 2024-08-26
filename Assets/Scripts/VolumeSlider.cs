@@ -6,13 +6,14 @@ using TMPro;
 
 public class VolumeSlider : MonoBehaviour
 {
+    public AudioManager audioManager
     public Slider slider;
     public TMP_Text volumeText;
 
     void Start()
     {
         // Get the current volume from the AudioManager and set the slider value
-        AudioManager audioManager = FindObjectOfType<AudioManager>();
+        audioManager = FindObjectOfType<AudioManager>();
         float currentVolume = audioManager.GetVolume();
         slider.value = currentVolume * 100f;  // Convert 0.0-1.0 range to 0-100 range
 
@@ -26,7 +27,7 @@ public class VolumeSlider : MonoBehaviour
     public void OnVolumeChange()
     {
         // Adjust the volume in the MusicManager
-        FindObjectOfType<AudioManager>().SetVolume(slider.value);
+        audioManager.SetVolume(slider.value);
 
         // Update the volume text to display the current slider value
         volumeText.text = slider.value.ToString("0");

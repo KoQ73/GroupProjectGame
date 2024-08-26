@@ -14,11 +14,11 @@ public class PlaySFX : MonoBehaviour
 
     public void OnButtonClick()
     {
-        audioManager.GetComponent<AudioManager>().PlayButtonClick();
+        audioManager.PlayButtonClick();
     }
 
     public void OnCardDraw()
     {
-        audioManager.GetComponent<AudioManager>().PlayDrawCard();
+        audioManager.PlayDrawCard();
     }
 }
