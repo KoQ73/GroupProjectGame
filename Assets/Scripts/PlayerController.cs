@@ -278,6 +278,14 @@ public class PlayerController : MonoBehaviour
                 {
                     toDestroy.Add(u);
                 }
+                else
+                {
+                    UnitHealthBar unitHealthBar = u.unitGameObject.GetComponentInChildren<UnitHealthBar>();
+                    if (unitHealthBar != null)
+                    {
+                        unitHealthBar.UpdateHealthbar((float)u.health, (float)u.maxHealth);
+                    }
+                }
                 break;
             }
         }
