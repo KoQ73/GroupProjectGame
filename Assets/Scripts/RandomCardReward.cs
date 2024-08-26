@@ -26,26 +26,35 @@ public class RandomCardReward : MonoBehaviour
 
     public void AssignRandomCards()
     {
-        
         RewardUI.SetActive(true);
 
-        if (cardManager.AvailableCards.Count > 0)
+        if (cardManager.AvailableCards.Count > 1)
         {
-           
-            // Assign a random card from availableCards to cardReward1
             int randomIndex1 = Random.Range(0, cardManager.AvailableCards.Count);
             Sprite sprite1 = cardManager.AvailableCards[randomIndex1].cardSprite;
-            cardReward1.GetComponent<Image>().sprite = sprite1;  // Assign sprite to the Image component of Button
+            cardReward1.GetComponent<Image>().sprite = sprite1;
 
-            // Assign a different random card from availableCards to cardReward2
-            int randomIndex2 = Random.Range(0, cardManager.AvailableCards.Count);
+            int randomIndex2;
+
+            do
+            {
+                randomIndex2 = Random.Range(0, cardManager.AvailableCards.Count);
+            } while (randomIndex2 == randomIndex1);
+
             Sprite sprite2 = cardManager.AvailableCards[randomIndex2].cardSprite;
-            cardReward2.GetComponent<Image>().sprite = sprite2;  // Assign sprite to the Image component of Button
+            cardReward2.GetComponent<Image>().sprite = sprite2;
+        }
+        else if (cardManager.AvailableCards.Count == 1)
+        {
+            Sprite sprite1 = cardManager.AvailableCards[0].cardSprite;
+            cardReward1.GetComponent<Image>().sprite = sprite1;
+            cardReward2.GetComponent<Image>().sprite = sprite1;
         }
         else
         {
             Debug.LogError("No cards available in availableCards list!");
         }
     }
+
 
 }
