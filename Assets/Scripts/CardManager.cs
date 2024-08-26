@@ -14,6 +14,8 @@ public class CardManager : MonoBehaviour
     [SerializeField] Sprite executeImage;
 
     List<Card> deckPile;
+    public List<Card> DeckPile { get { return deckPile; } }
+
     List<Card> discardPile;
     List<Card> cardsInHand;
 
