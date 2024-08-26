@@ -186,6 +186,7 @@ public class CardManager : MonoBehaviour
         firstCard.SetActive(true);
         firstCard.GetComponent<Button>().onClick.RemoveAllListeners();
         firstCard.GetComponent<Image>().sprite = moveImage;
+        firstCard.GetComponent<Image>().color = Color.white;
         firstCard.transform.Find("CardDescription").gameObject.GetComponent<TextMeshProUGUI>().text = "Move 2 blocks";
         firstCard.transform.Find("EnergyCost").gameObject.GetComponent<TextMeshProUGUI>().text = "1";
         firstCard.GetComponent<Button>().onClick.AddListener(delegate { SetListenerToConfirmation(1); });
@@ -199,12 +200,6 @@ public class CardManager : MonoBehaviour
             
             if (deckPile.Count <= 0 && discardPile.Count > 0)
             {
-                /*foreach (Card card in discardPile)
-                {
-                    deckPile.Add(card);
-                }
-
-                discardPile.Clear();*/
                 ShuffleDiscardBack();
 
                 ShuffleDeck();
@@ -214,6 +209,7 @@ public class CardManager : MonoBehaviour
             Card targetCardVariables = deckPile[0];
             targetCard.SetActive(true);
             targetCard.GetComponent<Button>().onClick.RemoveAllListeners();
+            targetCard.GetComponent<Image>().color = Color.white;
 
             DesignateCardProperties(targetCard, targetCardVariables);
 
@@ -258,6 +254,7 @@ public class CardManager : MonoBehaviour
         for (int i = 1; i < 6; i++)
         {
             GameObject targetCard = cardContainer.transform.Find("CardBtn" + i.ToString()).gameObject;
+            targetCard.GetComponent<Image>().color = Color.white;
             targetCard.SetActive(false);
         }
 
@@ -278,6 +275,11 @@ public class CardManager : MonoBehaviour
         {
             //Show movement card
             cardContainer.transform.Find("CardBtn1").gameObject.SetActive(true);
+
+            if (totalEnergy < 1)
+            {
+                cardContainer.transform.Find("CardBtn1").gameObject.GetComponent<Image>().color = Color.grey;
+            }
 
             //show rest of the cards in hand
             for (int i = 2; i < cardsInHand.Count + 2; i++)
@@ -302,6 +304,12 @@ public class CardManager : MonoBehaviour
         targetCard.GetComponent<Image>().sprite = targetCardVariables.cardSprite;
         targetCard.transform.Find("CardDescription").gameObject.GetComponent<TextMeshProUGUI>().text = targetCardVariables.cardDescription;
         targetCard.transform.Find("EnergyCost").gameObject.GetComponent<TextMeshProUGUI>().text = targetCardVariables.energyCost.ToString();
+
+        if (totalEnergy < targetCardVariables.energyCost)
+        {
+            targetCard.GetComponent<Image>().color = Color.grey;
+        }
+
         if (targetCardVariables.cardName == "Basic Attack")
         {
             targetCard.GetComponent<Button>().onClick.AddListener(delegate { SetListenerToConfirmation(targetCardVariables.energyCost); });
