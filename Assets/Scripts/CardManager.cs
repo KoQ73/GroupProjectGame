@@ -108,8 +108,8 @@ public class CardManager : MonoBehaviour
         availableCards.Add(basicBlockCard);
 
         //Heal Card [2]
-        energyCost = 3;
-        cardValue = 10;
+        energyCost = 1;
+        cardValue = 5;
         moveValue = 0;
         cardName = "Heal";
         cardDescription = "Heal " + cardValue;
@@ -118,7 +118,7 @@ public class CardManager : MonoBehaviour
         availableCards.Add(healCard);
 
         //Circular Attack Card [3]
-        energyCost = 2;
+        energyCost = 1;
         cardValue = 3;
         moveValue = 0;
         cardName = "Circular Attack";
@@ -128,11 +128,11 @@ public class CardManager : MonoBehaviour
         availableCards.Add(circularAttackCard);
 
         //Execute Card [4]
-        energyCost = 3;
+        energyCost = 2;
         cardValue = 2;
         moveValue = 0;
         cardName = "Execute";
-        cardDescription = "Deal " + cardValue + " damage\nIf target > 30%, it immediately dies";
+        cardDescription = "Deal " + cardValue + " damage\nIf target < 15%, it immediately dies";
         Card executeCard = new Card(energyCost, cardValue, moveValue, cardName, cardDescription, executeImage);
 
         availableCards.Add(executeCard);
@@ -141,13 +141,13 @@ public class CardManager : MonoBehaviour
     private void PopulateDefaultDeck()
     {
         //Add Basic Attack Cards
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
             deckPile.Add(availableCards[0]);
         }
 
         //Add Basic Block Cards
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
             deckPile.Add(availableCards[1]);
         }

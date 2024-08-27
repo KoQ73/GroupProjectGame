@@ -64,10 +64,10 @@ public class UnitController : MonoBehaviour
     {
         typesOfUnits.Clear();
         //Basic Enemy [0]
-        typesOfUnits.Add(new Unit(new Vector2Int(), 1, movementSpeed, 10, 10, 5, "Basic", "Basic Enemy", null));
+        typesOfUnits.Add(new Unit(new Vector2Int(), 2, movementSpeed, 15, 15, 5, "Basic", "Basic Enemy", null));
 
         //Stronger Enemy [1]
-        typesOfUnits.Add(new Unit(new Vector2Int(), 2, movementSpeed, 20, 20, 5, "Basic", "Stronger Enemy", null));
+        typesOfUnits.Add(new Unit(new Vector2Int(), 1, movementSpeed, 30, 30, 9, "Basic", "Stronger Enemy", null));
     }
 
     public void PopulateObstacles(int number)

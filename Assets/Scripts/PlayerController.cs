@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
         currentLocation = new Vector2Int();
         selectedLocation = new Vector2Int();
 
-        maxPlayerHealth = 10;
+        maxPlayerHealth = 20;
         playerHealth = maxPlayerHealth;
         hpSlider.maxValue = maxPlayerHealth;
         hpSlider.value = playerHealth;
@@ -456,7 +456,7 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < units.Count; i++)
         {
             Unit u = units[i];
-            float threshold = u.maxHealth * 0.1f;
+            float threshold = u.maxHealth * 0.15f;
 
             if (u.cords == selectedLocation)
             {
