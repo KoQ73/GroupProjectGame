@@ -73,12 +73,12 @@ public class UnitController : MonoBehaviour
     public void PopulateObstacles(int number)
     {
         //Removes each obstacle currently in the list if any
-        foreach (Unit obstacle in obstacles)
+        /*foreach (Unit obstacle in obstacles)
         {
             Destroy(obstacle.unitGameObject);
             gridManager.ReleaseTile(obstacle.cords);
             obstacles.Remove(obstacle);
-        }
+        }*/
 
         //obstacles.Clear();
 
@@ -102,13 +102,23 @@ public class UnitController : MonoBehaviour
 
     public void ClearAllUnits()
     {
+        //Removes each obstacle currently in the list if any
+        foreach (Unit obstacle in obstacles)
+        {
+            Destroy(obstacle.unitGameObject);
+            gridManager.ReleaseTile(obstacle.cords);
+            //obstacles.Remove(obstacle);
+        }
+        obstacles.Clear();
+
         //Removes each unit currently in the list if any
         foreach (Unit unit in units)
         {
             Destroy(unit.unitGameObject);
             gridManager.ReleaseTile(unit.cords);
-            units.Remove(unit);
+            //units.Remove(unit);
         }
+        units.Clear();
     }
 
     public void PopulateUnits(int number, Unit selectedUnit)
