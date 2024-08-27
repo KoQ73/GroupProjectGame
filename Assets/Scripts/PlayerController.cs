@@ -530,6 +530,7 @@ public class PlayerController : MonoBehaviour
     {
         // decrease player health after one round
         shield -= s;
+        shieldSlider.maxValue = shield;
     }
 
     public void HealCard(int h)
