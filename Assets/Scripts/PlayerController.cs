@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Material inactiveTile;
     [SerializeField] Material attackableTile;
 
+    private GameObject oldTile;
+    private GameObject currentTile;
     private Vector2Int currentLocation;
     private Vector2Int selectedLocation;
     private bool isMoving = false;
@@ -93,11 +95,23 @@ public class PlayerController : MonoBehaviour
                     if (hit.transform.tag == "Tile")
                     {
                         selectedLocation = hit.transform.GetComponent<Labeller>().cords;
+                        currentTile = GameObject.Find("(" + selectedLocation.x.ToString() + ", " + selectedLocation.y.ToString() + ")");
+                        foreach(Transform child in currentTile.transform) {
+                            child.GetComponentInChildren<MeshRenderer>().material.color = Color.green;
+                        }
                         selectedUnit.transform.position = new Vector3(selectedLocation.x, selectedUnit.position.y, selectedLocation.y);
 
                         pathList = pathFinder.findPath(gridManager.GetTile(currentLocation), gridManager.GetTile(selectedLocation));
 
                     }
+                    if(oldTile != null && oldTile != currentTile){
+                        foreach(Transform child in oldTile.transform) {
+                            child.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+                        }
+                        oldTile.GetComponentInChildren<MeshRenderer>().material=movableTile;
+                        UnityEngine.Debug.Log("current: "+ oldTile);
+                    }
+                    oldTile = currentTile;
                 }
             }
         }
@@ -121,9 +135,24 @@ public class PlayerController : MonoBehaviour
                     if (hit.transform.tag == "Tile")
                     {
                         selectedLocation = hit.transform.GetComponent<Labeller>().cords;
-                        //Check is Selected Location has an enemy
+                        currentTile = GameObject.Find("(" + selectedLocation.x.ToString() + ", " + selectedLocation.y.ToString() + ")");
+                        foreach(Transform child in currentTile.transform) {
+                            child.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+                        }
 
                     }
+                    if(oldTile != null && oldTile != currentTile){
+                        foreach(Transform child in oldTile.transform) {
+                            child.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+                        }
+                        if (oldTile == GameObject.Find("("+ selectedUnit.position.x.ToString()+", "+selectedUnit.position.z.ToString()+")")){
+                        oldTile.GetComponentInChildren<MeshRenderer>().material=inactiveTile;
+                        }
+                        else{
+                        oldTile.GetComponentInChildren<MeshRenderer>().material=attackableTile;
+                        }
+                    }
+                    oldTile = currentTile;
                 }
             }
         }
@@ -455,7 +484,10 @@ public class PlayerController : MonoBehaviour
         List<Unit> units = FindObjectOfType<UnitController>().Units;
         if (units.Count <= 0)
         {
-            
+            oldTile = null;
+            currentTile = null;
+            DisableMovableTiles();
+            DisableAttackableTiles();
             RandomCardReward.AssignRandomCards();
         }
     }
@@ -652,6 +684,13 @@ public class PlayerController : MonoBehaviour
 
     private void DisableMovableTiles()
     {
+        GameObject playerTile = GameObject.Find("(" + selectedUnit.position.x.ToString() + ", " + selectedUnit.position.z.ToString() + ")");
+        if (playerTile!=null){
+            foreach(Transform child in playerTile.transform) {
+                            child.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+                        }
+                playerTile.GetComponentInChildren<MeshRenderer>().material=inactiveTile;
+        }
         for (int i = 0; i < movableCords.Count; i++)
         {
             GameObject tileSteppedOn = GameObject.Find("(" + movableCords[i].x.ToString() + ", " + movableCords[i].y.ToString() + ")");
@@ -662,6 +701,8 @@ public class PlayerController : MonoBehaviour
                 tileSteppedOn.GetComponentInChildren<MeshRenderer>().material = inactiveTile;
             }
         }
+        oldTile = null;
+        currentTile = null;
     }
 
     private void EnableAttackableTiles()
@@ -680,6 +721,13 @@ public class PlayerController : MonoBehaviour
 
     private void DisableAttackableTiles()
     {
+        GameObject playerTile = GameObject.Find("(" + selectedUnit.position.x.ToString() + ", " + selectedUnit.position.z.ToString() + ")");
+        if (playerTile!=null){
+            foreach(Transform child in playerTile.transform) {
+                            child.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+                        }
+                playerTile.GetComponentInChildren<MeshRenderer>().material=inactiveTile;
+        }
         for (int i = 0; i < attackableCords.Count; i++)
         {
             GameObject tileSteppedOn = GameObject.Find("(" + attackableCords[i].x.ToString() + ", " + attackableCords[i].y.ToString() + ")");
@@ -687,8 +735,13 @@ public class PlayerController : MonoBehaviour
             if (tileSteppedOn != null)
             {
                 tileSteppedOn.GetComponent<BoxCollider>().enabled = false;
+                foreach(Transform child in tileSteppedOn.transform) {
+                            child.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+                        }
                 tileSteppedOn.GetComponentInChildren<MeshRenderer>().material = inactiveTile;
             }
         }
+        oldTile = null;
+        currentTile = null;
     }
 }
