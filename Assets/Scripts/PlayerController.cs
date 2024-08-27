@@ -49,6 +49,9 @@ public class PlayerController : MonoBehaviour
     PathFinderA pathFinder;
     private RangeFinder rangeFinder;
 
+    // Animator
+    Animator animator;
+
     //public GameObject RewardUI;  // Reference to the Reward UI GameObject
     private RandomCardReward RandomCardReward;
 
@@ -74,6 +77,8 @@ public class PlayerController : MonoBehaviour
         hpText.text = playerHealth.ToString();
         shieldSlider.value = shield;
         shieldText.text = shield.ToString();
+
+        animator = selectedUnit.GetComponent<Animator>();   // Animator for player
 
         RandomCardReward = FindObjectOfType<RandomCardReward>();
     }
@@ -201,6 +206,9 @@ public class PlayerController : MonoBehaviour
 
         if (pathList.Count > 0)
         {
+            animator.SetBool("isWalking", true);    // Change animation
+            selectedUnit.LookAt(pathList[0].transform.position);    // Face direction
+
             var step = movementSpeed * Time.deltaTime;
             selectedUnit.position = Vector3.MoveTowards(selectedUnit.position, new Vector3(pathList[0].transform.position.x, selectedUnit.position.y, pathList[0].transform.position.z), step);
 
@@ -212,6 +220,7 @@ public class PlayerController : MonoBehaviour
 
                 if (pathList.Count <= 0)
                 {
+                    animator.SetBool("isWalking", false);   // Revert back to idle animation
                     move = false;
                     cardManager.BackToCards();
                 }
@@ -223,6 +232,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            animator.SetBool("isWalking", false);   // Revert back to idle animation
             move = false;
             cardManager.BackToCards();
         }
@@ -277,6 +287,11 @@ public class PlayerController : MonoBehaviour
 
     public void ConfirmAttackCard(int dmg)
     {
+        // Animate it
+        // face the direction of the enemy to attack
+        selectedUnit.LookAt(new Vector3(selectedLocation.x, selectedUnit.position.y, selectedLocation.y));
+        StartCoroutine(WaitAndAnimate(1.0f, "isBasicAttack"));
+
         DisableAttackableTiles();
         DealAttack(dmg);
         isAttacking = false;
@@ -342,6 +357,7 @@ public class PlayerController : MonoBehaviour
 
     public void ConfirmSlashAttackCard(int dmg)
     {
+        StartCoroutine(WaitAndAnimate(1.0f, "isSlashAttack"));
         DisableAttackableTiles();
         DealSlashAttack(dmg);
     }
@@ -417,6 +433,9 @@ public class PlayerController : MonoBehaviour
         isAttacking = true;
     }
     public void ConfirmExecuteCard(int dmg){
+        // face the direction of the enemy to attack
+        selectedUnit.LookAt(new Vector3(selectedLocation.x, selectedUnit.position.y, selectedLocation.y));
+        StartCoroutine(WaitAndAnimate(1.0f, "isExecuteAttack"));
         DisableAttackableTiles();
         Execute(dmg);
         isAttacking = false;
@@ -743,5 +762,13 @@ public class PlayerController : MonoBehaviour
         }
         oldTile = null;
         currentTile = null;
+    }
+
+    // For animations
+    IEnumerator WaitAndAnimate(float sec, string s)
+    {
+        animator.SetBool(s, true);
+        yield return new WaitForSeconds(sec);
+        animator.SetBool(s, false);
     }
 }
