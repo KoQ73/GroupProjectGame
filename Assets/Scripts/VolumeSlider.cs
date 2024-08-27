@@ -14,8 +14,8 @@ public class VolumeSlider : MonoBehaviour
     {
         // Get the current volume from the AudioManager and set the slider value
         audioManager = FindObjectOfType<AudioManager>();
-        float currentVolume = audioManager.GetVolume();
-        slider.value = currentVolume * 100f;  // Convert 0.0-1.0 range to 0-100 range
+        float currentMusicVolume = audioManager.GetMusicVolume();
+        slider.value = currentMusicVolume * 100f;  // Convert 0.0-1.0 range to 0-100 range
 
         // Update the volume text initially
         volumeText.text = slider.value.ToString("0");

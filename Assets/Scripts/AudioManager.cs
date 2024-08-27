@@ -6,7 +6,7 @@ public class AudioManager : MonoBehaviour
 {
     private static AudioManager instance;
     [SerializeField] AudioSource music;
-    [SerializeField] float defaultMusicVolume = 75f;
+    [SerializeField] float defaultVolume = 10f;
     [SerializeField] AudioSource UISource;
     [SerializeField] AudioClip buttonClick;
     [SerializeField] AudioClip drawCard;
@@ -20,7 +20,8 @@ public class AudioManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            music.volume = defaultMusicVolume / 100f;
+            music.volume = defaultVolume / 100f;
+            UISource.volume = defaultVolume / 100f;
         }
         else
         {
@@ -29,7 +30,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public float GetVolume()
+    public float GetMusicVolume()
     {
         return music.volume;
     }
@@ -38,6 +39,7 @@ public class AudioManager : MonoBehaviour
     public void SetVolume(float volume)
     {
         music.volume = volume / 100f;
+        UISource.volume = volume / 100f;
     }
 
     public void PlayButtonClick()
