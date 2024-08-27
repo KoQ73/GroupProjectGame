@@ -94,18 +94,21 @@ public class LevelController : MonoBehaviour
         }
         else if (level == 3)
         {
+            obstacleNumber = 4;
             basicUnitNumber = 3;
             unitController.PopulateObstacles(obstacleNumber);
             unitController.PopulateUnits(basicUnitNumber, typesOfEnemies[0]);
         }
         else if (level == 4)
         {
+            obstacleNumber = 4;
             basicUnitNumber = 4;
             unitController.PopulateObstacles(obstacleNumber);
             unitController.PopulateUnits(basicUnitNumber, typesOfEnemies[0]);
         }
         else if (level == 5)
         {
+            obstacleNumber = 4;
             basicUnitNumber = 2;
             strongerUnitNumber = 1;
             unitController.PopulateObstacles(obstacleNumber);
