@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
@@ -37,6 +38,7 @@ public class UnitController : MonoBehaviour
     PathFinderA pathFinder;
     PlayerController playerController;
     GameObject player;
+    Animator animator;
 
     void Start()
     {
@@ -87,7 +89,7 @@ public class UnitController : MonoBehaviour
 
             while (cordsTaken)
             {
-                obstacleCords = new Vector2Int(Random.Range(0, gridManager.GridSize.x), Random.Range(0, gridManager.GridSize.y));
+                obstacleCords = new Vector2Int(UnityEngine.Random.Range(0, gridManager.GridSize.x), UnityEngine.Random.Range(0, gridManager.GridSize.y));
 
                 cordsTaken = coordsExist(obstacleCords);
             }
@@ -128,7 +130,7 @@ public class UnitController : MonoBehaviour
 
             while (cordsTaken)
             {
-                unitCords = new Vector2Int(Random.Range(0, gridManager.GridSize.x), Random.Range(0, gridManager.GridSize.y));
+                unitCords = new Vector2Int(UnityEngine.Random.Range(0, gridManager.GridSize.x), UnityEngine.Random.Range(0, gridManager.GridSize.y));
 
                 cordsTaken = coordsExist(unitCords);
             }
@@ -137,7 +139,7 @@ public class UnitController : MonoBehaviour
 
             if (selectedUnit.unitName == "Basic Enemy")
             {
-                gameObject = (GameObject)Instantiate(basicUnit, new Vector3(unitCords.x, 0.55f, unitCords.y), Quaternion.identity);
+                gameObject = (GameObject)Instantiate(basicUnit, new Vector3(unitCords.x, 0.1f, unitCords.y), Quaternion.identity);
             }
             else if (selectedUnit.unitName == "Stronger Enemy")
             {
@@ -209,11 +211,17 @@ public class UnitController : MonoBehaviour
         targets.Add(leftCord);
         targets.Add(rightCord);
 
+        // Get animator
+        animator = unit.unitGameObject.GetComponent<Animator>();
+
         for (int i = 0; i < targets.Count; i++)
         {
             Vector2Int target = targets[i];
             if (playerCord == target)
             {
+                // Add animation
+                unit.unitGameObject.transform.LookAt(new Vector3(playerCord.x, unit.unitGameObject.transform.position.y, playerCord.y));
+                StartCoroutine(WaitAndAnimate(1.5f, "isAttack"));
                 // Adding shield
                 int remainingAttack = 0;
                 if (playerController.shield > 0)
@@ -248,17 +256,22 @@ public class UnitController : MonoBehaviour
 
         foreach (Unit unit in units)
         {
+            // Move animation for unit
+            animator = unit.unitGameObject.GetComponent<Animator>();
+            if (animator == null)
+            {
+                Debug.Log("Animator is not on");
+            }
             if (!isDefeated)
             {
                 //gridManager.ReleaseTile(unit.cords);
                 pathList = pathFinder.findPath(gridManager.GetTile(unit.cords), gridManager.GetTile(playerCords));
                 if (pathList.Count > 0)
                 {
-
                     for (int i = 0; i < unit.moveDistance; i++)
                     {
                         gridManager.ReleaseTile(unit.cords);
-
+                        
                         //Check player's cords
                         if (pathList[i].cords == new Vector2Int((int)player.transform.position.x, (int)player.transform.position.z))
                         {
@@ -267,22 +280,29 @@ public class UnitController : MonoBehaviour
                             break;
                         }
                         float travelPercent = 0f;
-
+                        // Animate moving
+                        animator.SetBool("isRunning", true);
                         while (travelPercent < 1f)
                         {
+                            // Direction to face for enemy
+                            unit.unitGameObject.transform.LookAt(new Vector3(pathList[i].transform.position.x, unit.unitGameObject.transform.position.y, pathList[i].transform.position.z));
                             travelPercent += Time.deltaTime * movementSpeed;
-                            unit.unitGameObject.transform.position = Vector3.MoveTowards(unit.unitGameObject.transform.position, new Vector3(pathList[i].transform.position.x, unit.unitGameObject.transform.position.y, pathList[i].transform.position.z), travelPercent);
-                            yield return new WaitForEndOfFrame();
 
+                            var step = movementSpeed * Time.deltaTime;
+                            unit.unitGameObject.transform.position = Vector3.MoveTowards(unit.unitGameObject.transform.position, new Vector3(pathList[i].transform.position.x, unit.unitGameObject.transform.position.y, pathList[i].transform.position.z), step);
+                            yield return new WaitForEndOfFrame();
                         }
                         //PositionUnitOnTile(unit, i);
                         unit.unitGameObject.transform.LookAt(new Vector3(pathList[i].transform.position.x, unit.unitGameObject.transform.position.y, pathList[i].transform.position.z));
 
                         unit.cords = pathList[i].cords;
-                        gridManager.BlockTile(unit.cords);
-                    }
 
+                        gridManager.BlockTile(unit.cords);
+
+                    }
                 }
+                // Revert back to idle animation
+                animator.SetBool("isRunning", false);
 
                 AttackPlayerMelee(unit);
                 
@@ -301,6 +321,16 @@ public class UnitController : MonoBehaviour
     private void PositionUnitOnTile(Unit unit, int pathIndex)
     {
         unit.unitGameObject.transform.position = new Vector3(pathList[pathIndex].transform.position.x, unit.unitGameObject.transform.position.y, pathList[pathIndex].transform.position.z);
+    }
+
+    // For animations
+    IEnumerator WaitAndAnimate(float sec, string s)
+    {
+        Debug.Log("Attack");
+        animator.SetBool(s, true);
+        Debug.Log(animator.GetBool(s));
+        yield return new WaitForSeconds(sec);
+        animator.SetBool(s, false);
     }
 
 }
