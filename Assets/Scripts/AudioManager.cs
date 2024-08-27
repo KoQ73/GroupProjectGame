@@ -10,6 +10,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioSource UISource;
     [SerializeField] AudioClip buttonClick;
     [SerializeField] AudioClip drawCard;
+    [SerializeField] AudioClip attackHit;
+    [SerializeField] AudioClip shieldBlock;
 
     void Awake()
     {
@@ -46,5 +48,15 @@ public class AudioManager : MonoBehaviour
     public void PlayDrawCard()
     {
         UISource.PlayOneShot(drawCard);
+    }
+
+    public void PlayAttackHit()
+    {
+        UISource.PlayOneShot(attackHit);
+    }
+
+    public void PlayShieldBlock()
+    {
+        UISource.PlayOneShot(shieldBlock);
     }
 }
