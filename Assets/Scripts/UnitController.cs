@@ -154,7 +154,7 @@ public class UnitController : MonoBehaviour
             }
             else if (selectedUnit.unitName == "Stronger Enemy")
             {
-                gameObject = (GameObject)Instantiate(StrongerUnit, new Vector3(unitCords.x, 0.55f, unitCords.y), Quaternion.identity);
+                gameObject = (GameObject)Instantiate(StrongerUnit, new Vector3(unitCords.x, 0.1f, unitCords.y), Quaternion.identity);
             }
 
             gridManager.BlockTile(unitCords);
@@ -223,7 +223,8 @@ public class UnitController : MonoBehaviour
         targets.Add(rightCord);
 
         // Get animator
-        animator = unit.unitGameObject.GetComponent<Animator>();
+        Animator a1;
+        a1 = unit.unitGameObject.GetComponent<Animator>();
 
         for (int i = 0; i < targets.Count; i++)
         {
@@ -232,7 +233,7 @@ public class UnitController : MonoBehaviour
             {
                 // Add animation
                 unit.unitGameObject.transform.LookAt(new Vector3(playerCord.x, unit.unitGameObject.transform.position.y, playerCord.y));
-                StartCoroutine(WaitAndAnimate(1.5f, "isAttack"));
+                StartCoroutine(WaitAndAnimate(1.5f, "isAttack", a1));
                 // Adding shield
                 int remainingAttack = 0;
                 if (playerController.shield > 0)
@@ -335,13 +336,11 @@ public class UnitController : MonoBehaviour
     }
 
     // For animations
-    IEnumerator WaitAndAnimate(float sec, string s)
+    IEnumerator WaitAndAnimate(float sec, string s, Animator a1)
     {
-        Debug.Log("Attack");
-        animator.SetBool(s, true);
-        Debug.Log(animator.GetBool(s));
+        a1.SetBool(s, true);
         yield return new WaitForSeconds(sec);
-        animator.SetBool(s, false);
+        a1.SetBool(s, false);
     }
 
 }
