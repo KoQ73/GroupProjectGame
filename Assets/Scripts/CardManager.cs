@@ -12,6 +12,7 @@ public class CardManager : MonoBehaviour
     [SerializeField] Sprite healImage;
     [SerializeField] Sprite circularAttackImage;
     [SerializeField] Sprite executeImage;
+    [SerializeField] Sprite heavyAttackImage;
 
     public List<Card> deckPile;
 
@@ -136,6 +137,16 @@ public class CardManager : MonoBehaviour
         Card executeCard = new Card(energyCost, cardValue, moveValue, cardName, cardDescription, executeImage);
 
         availableCards.Add(executeCard);
+
+        //Heavy Attack Card [5]
+        energyCost = 2;
+        cardValue = 12;
+        moveValue = 0;
+        cardName = "Heavy Attack";
+        cardDescription = "Deal " + cardValue + " damage 1 space forward"; ;
+        Card heavyAttackCard = new Card(energyCost, cardValue, moveValue, cardName, cardDescription, heavyAttackImage);
+
+        availableCards.Add(heavyAttackCard);
     }
 
     private void PopulateDefaultDeck()
@@ -310,7 +321,7 @@ public class CardManager : MonoBehaviour
             targetCard.GetComponent<Image>().color = Color.grey;
         }
 
-        if (targetCardVariables.cardName == "Basic Attack")
+        if (targetCardVariables.cardName == "Basic Attack" || targetCardVariables.cardName == "Heavy Attack")
         {
             targetCard.GetComponent<Button>().onClick.AddListener(delegate { SetListenerToConfirmation(targetCardVariables.energyCost); });
             targetCard.GetComponent<Button>().onClick.AddListener(delegate { BasicAttackConfirmCancelImage(targetCardVariables); });

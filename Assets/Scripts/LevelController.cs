@@ -15,6 +15,7 @@ public class LevelController : MonoBehaviour
     Vector2Int playerPosition;
     string playerDirection;
     [SerializeField] GameObject transitionPanel;
+    [SerializeField] GameObject currentLevelShow;
 
     PlayerController playerController;
     UnitController unitController;
@@ -56,6 +57,9 @@ public class LevelController : MonoBehaviour
         List<Unit> typesOfEnemies = unitController.TypesOfUnits;
 
         gridManager.ResetTiles();
+
+        //Set Current Level
+        currentLevelShow.GetComponent<TextMeshProUGUI>().text = "Level " + level.ToString();
 
         //Set player location
         if (playerDirection == "Left")
