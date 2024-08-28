@@ -549,7 +549,7 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < units.Count; i++)
         {
             Unit u = units[i];
-            float threshold = u.maxHealth * 0.15f;
+            float threshold = u.maxHealth * 0.3f;
 
             if (u.cords == selectedLocation)
             {
@@ -649,6 +649,7 @@ public class PlayerController : MonoBehaviour
         // add shield
         shield += s;
         shieldSlider.maxValue = shield;
+        
 
     }
 
@@ -656,6 +657,8 @@ public class PlayerController : MonoBehaviour
     {
         // increase player health for one round
         // UnityEngine.Debug.Log("shield:"+shield);
+        GameObject casting = selectedUnit.Find("casting").gameObject;
+        casting.SetActive(true);
 
     }
 
@@ -664,6 +667,7 @@ public class PlayerController : MonoBehaviour
         // decrease player health after one round
         shield -= s;
         shieldSlider.maxValue = shield;
+   
     }
 
     public void HealCard(int h)
@@ -688,6 +692,7 @@ public class PlayerController : MonoBehaviour
     public void ConfirmHealCard()
     {
         // increase player health for one round
+        audioManager.PlayHealing();
 
     }
 

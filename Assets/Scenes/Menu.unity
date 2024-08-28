@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028353, g: 0.22571383, b: 0.30692253, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1951,12 +1951,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   music: {fileID: 1043248570}
-  defaultMusicVolume: 10
+  defaultVolume: 10
   UISource: {fileID: 1758409134}
   buttonClick: {fileID: 8300000, guid: 59e946183b5964bcfa5b2a0aaa33c940, type: 3}
   drawCard: {fileID: 8300000, guid: badcd779198da429aba1b829f75de642, type: 3}
   attackHit: {fileID: 8300000, guid: 6f2345b0ff6234ab693d90efc19f1d8e, type: 3}
   shieldBlock: {fileID: 8300000, guid: 959fea47cdc194360aac63f6ba4d48dc, type: 3}
+  healing: {fileID: 8300000, guid: 22e323edb8d514ce2bcb5c210713d320, type: 3}
 --- !u!4 &1631316331
 Transform:
   m_ObjectHideFlags: 0

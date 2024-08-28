@@ -225,6 +225,7 @@ public class UnitController : MonoBehaviour
         targets.Add(leftCord);
         targets.Add(rightCord);
 
+        GameObject casting = playerController.selectedUnit.Find("casting").gameObject;
         // Get animator
         Animator a1;
         a1 = unit.unitGameObject.GetComponent<Animator>();
@@ -248,7 +249,9 @@ public class UnitController : MonoBehaviour
                     {
                         remainingAttack = -playerController.shield;
                         playerController.playerHealth -= remainingAttack;
+                        casting.SetActive(false);
                         StartCoroutine(audioManager.WaitAndPlaySFX(1.2f,"attack"));
+                       
 
 
                     }
@@ -257,6 +260,7 @@ public class UnitController : MonoBehaviour
                 {
                     //Debug.Log("Player Health Before: " + playerController.playerHealth);
                     playerController.playerHealth -= unit.attackDmg;
+                    casting.SetActive(false);
                     StartCoroutine(audioManager.WaitAndPlaySFX(0.7f,"attack"));
 
                     //Debug.Log("Player Health After: " + playerController.playerHealth);
@@ -333,6 +337,10 @@ public class UnitController : MonoBehaviour
         }
         // update the player shield to zero after enemy finished attacking
         playerController.shield = 0;
+        GameObject casting = playerController.selectedUnit.Find("casting").gameObject;
+        casting.SetActive(false);
+
+
         
         if (!isDefeated)
         {

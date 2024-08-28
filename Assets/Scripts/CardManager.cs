@@ -133,7 +133,7 @@ public class CardManager : MonoBehaviour
         cardValue = 2;
         moveValue = 0;
         cardName = "Execute";
-        cardDescription = "Deal " + cardValue + " damage\nIf target < 15%, it immediately dies";
+        cardDescription = "Deal " + cardValue + " damage\nIf target < 30%, it immediately dies";
         Card executeCard = new Card(energyCost, cardValue, moveValue, cardName, cardDescription, executeImage);
 
         availableCards.Add(executeCard);

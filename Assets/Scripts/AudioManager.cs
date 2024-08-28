@@ -13,6 +13,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioClip drawCard;
     [SerializeField] AudioClip attackHit;
     [SerializeField] AudioClip shieldBlock;
+    [SerializeField] AudioClip healing;
+    
 
     void Awake()
     {
@@ -62,6 +64,12 @@ public class AudioManager : MonoBehaviour
     {
         UISource.PlayOneShot(shieldBlock);
     }
+
+    public void PlayHealing()
+    {
+        UISource.PlayOneShot(healing);
+    }
+    
 
     public IEnumerator WaitAndPlaySFX(float sec, string s){
         yield return new WaitForSeconds(sec);
