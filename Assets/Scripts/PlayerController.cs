@@ -307,6 +307,8 @@ public class PlayerController : MonoBehaviour
     public void DealAttack(int dmg){
         // Check which unit is selected
         List<Unit> units = FindObjectOfType<UnitController>().Units;
+        List<Unit> obstacles = FindObjectOfType<UnitController>().Obstacles;
+
 
         // Check which units to destroy
         List<Unit> toDestroy = new List<Unit>();
@@ -342,6 +344,39 @@ public class PlayerController : MonoBehaviour
             gridManager.ReleaseTile(u.cords);
             // Remove in array
             units.Remove(u);
+        }
+
+        for (int i = 0; i < obstacles.Count; i++)
+        {
+            Unit block = obstacles[i];
+            if (block.cords == selectedLocation)
+            {
+                block.health -= dmg;
+                // if health after is zero or less than zero, add it to toDestroy List
+                if (block.health <= 0)
+                {
+                    toDestroy.Add(block);
+                }
+                else
+                {
+                    // UnitHealthBar unitHealthBar = u.unitGameObject.GetComponentInChildren<UnitHealthBar>();
+                    // if (unitHealthBar != null)
+                    // {
+                    //     unitHealthBar.UpdateHealthbar((float)u.health, (float)u.maxHealth);
+                    // }
+                }
+                break;
+            }
+        }
+
+        foreach(Unit block  in toDestroy)
+        {
+            // Destroy the gameObject
+            Destroy(block.unitGameObject, 1);
+            // Release the tile
+            gridManager.ReleaseTile(block.cords);
+            // Remove in array
+            obstacles.Remove(block);
         }
 
         // Find UnitController and make isDefeated true
@@ -380,10 +415,24 @@ public class PlayerController : MonoBehaviour
         }
         return null;
     }
+    private Unit ObstacleExist(Vector2Int blockCords)
+    {
+        List<Unit> obstacles = FindObjectOfType<UnitController>().Obstacles;
+
+        foreach (Unit block in obstacles)
+        {
+            if (block.cords == blockCords)
+            {
+                return block;
+            }
+        }
+        return null;
+    }
 
     public void DealSlashAttack(int dmg)
     {
         List<Unit> units = FindObjectOfType<UnitController>().Units;
+        List<Unit> obstacles = FindObjectOfType<UnitController>().Obstacles;
 
         // Check which units to destroy
         List<Unit> toDestroy = new List<Unit>();
@@ -423,6 +472,41 @@ public class PlayerController : MonoBehaviour
             units.Remove(u);
         }
 
+        foreach (Vector2Int b in attackableCords)
+        {
+            // Check if there is enemy in the cords
+            Unit block = ObstacleExist(b);
+            if (block != null)
+            {
+                block.health -= dmg;
+                // if health after is zero or less than zero, add it to toDestroy List
+                if (block.health <= 0)
+                {
+                    toDestroy.Add(block);
+                }
+                else
+                {
+                    // UnitHealthBar unitHealthBar = u.unitGameObject.GetComponentInChildren<UnitHealthBar>();
+                    // if (unitHealthBar != null)
+                    // {
+                    //     unitHealthBar.UpdateHealthbar((float)u.health, (float)u.maxHealth);
+                    // }
+                }
+            }
+        }
+
+        // Destroy unit gameObjects and remove it from the list of units
+        foreach (Unit block in toDestroy)
+        {
+            // Destroy the gameObject
+            Destroy(block.unitGameObject, 1);
+            // Release the tile
+            gridManager.ReleaseTile(block.cords);
+            // Remove in array
+            obstacles.Remove(block);
+        }
+
+
         UnityEngine.Debug.Log(units.Count);
         checkLevelOver();
     }
@@ -449,6 +533,8 @@ public class PlayerController : MonoBehaviour
     public void Execute(int dmg){
         // Check which unit is selected
         List<Unit> units = FindObjectOfType<UnitController>().Units;
+        List<Unit> obstacles = FindObjectOfType<UnitController>().Obstacles;
+
 
         // Check which units to destroy
         List<Unit> toDestroy = new List<Unit>();
@@ -491,6 +577,46 @@ public class PlayerController : MonoBehaviour
             gridManager.ReleaseTile(u.cords);
             // Remove in array
             units.Remove(u);
+        }
+
+        for (int i = 0; i < obstacles.Count; i++)
+        {
+            Unit block = obstacles[i];
+            float threshold = block.maxHealth * 0.15f;
+
+            if (block.cords == selectedLocation)
+            {
+                if(block.health<= threshold){
+                    toDestroy.Add(block);
+                }
+                else{
+                    block.health -= dmg;
+                }
+                // if health after is zero or less than zero, add it to toDestroy List
+                if (block.health <= 0)
+                {
+                    toDestroy.Add(block);
+                }
+                else
+                {
+                    // UnitHealthBar unitHealthBar = u.unitGameObject.GetComponentInChildren<UnitHealthBar>();
+                    // if (unitHealthBar != null)
+                    // {
+                    //     unitHealthBar.UpdateHealthbar((float)u.health, (float)u.maxHealth);
+                    // }
+                }
+                break;
+            }
+        }
+
+        foreach(Unit block  in toDestroy)
+        {
+            // Destroy the gameObject
+            Destroy(block.unitGameObject, 1);
+            // Release the tile
+            gridManager.ReleaseTile(block.cords);
+            // Remove in array
+            obstacles.Remove(block);
         }
 
         // Find UnitController and make isDefeated true

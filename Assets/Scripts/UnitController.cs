@@ -21,6 +21,7 @@ public class UnitController : MonoBehaviour
     List<Unit> obstacles = new List<Unit>();
 
     public List<Unit> Units { get { return units; } }
+    public List<Unit> Obstacles { get { return obstacles; } }
 
     List<Unit> typesOfUnits = new List<Unit>();
     public List<Unit> TypesOfUnits { get { return typesOfUnits; } }
