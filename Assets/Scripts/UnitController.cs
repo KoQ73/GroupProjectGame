@@ -13,6 +13,8 @@ public class UnitController : MonoBehaviour
     [SerializeField] GameObject obstacleObject;
     [SerializeField] GameObject loseScreen;
 
+    private AudioManager audioManager;
+
     Unit selectedUnit;
     bool isDefeated;
     //bool enemyCleared;
@@ -53,6 +55,7 @@ public class UnitController : MonoBehaviour
         PopulateTypesOfUnits();
         //PopulateObstacles(4);
         //PopulateUnits(5);
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     // Update is called once per frame
@@ -233,22 +236,29 @@ public class UnitController : MonoBehaviour
             {
                 // Add animation
                 unit.unitGameObject.transform.LookAt(new Vector3(playerCord.x, unit.unitGameObject.transform.position.y, playerCord.y));
-                StartCoroutine(WaitAndAnimate(1.5f, "isAttack", a1));
+                StartCoroutine(WaitAndAnimate(1f, "isAttack", a1));
                 // Adding shield
                 int remainingAttack = 0;
                 if (playerController.shield > 0)
                 {
                     playerController.shield -= unit.attackDmg;
+
+                    StartCoroutine(audioManager.WaitAndPlaySFX(0.7f,"shield"));
                     if (playerController.shield < 0)
                     {
                         remainingAttack = -playerController.shield;
                         playerController.playerHealth -= remainingAttack;
+                        StartCoroutine(audioManager.WaitAndPlaySFX(1.2f,"attack"));
+
+
                     }
                 }
                 else
                 {
                     //Debug.Log("Player Health Before: " + playerController.playerHealth);
                     playerController.playerHealth -= unit.attackDmg;
+                    StartCoroutine(audioManager.WaitAndPlaySFX(0.7f,"attack"));
+
                     //Debug.Log("Player Health After: " + playerController.playerHealth);
                 }
 

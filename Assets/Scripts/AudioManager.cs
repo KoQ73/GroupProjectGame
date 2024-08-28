@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class AudioManager : MonoBehaviour
 {
@@ -60,5 +61,15 @@ public class AudioManager : MonoBehaviour
     public void PlayShieldBlock()
     {
         UISource.PlayOneShot(shieldBlock);
+    }
+
+    public IEnumerator WaitAndPlaySFX(float sec, string s){
+        yield return new WaitForSeconds(sec);
+        if (s.Equals("shield")){
+            PlayShieldBlock();
+        }
+        if (s.Equals("attack")){
+            PlayAttackHit();
+        }
     }
 }

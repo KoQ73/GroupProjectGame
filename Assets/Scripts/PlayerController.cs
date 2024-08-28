@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Material inactiveTile;
     [SerializeField] Material attackableTile;
 
+    private AudioManager audioManager;
     private GameObject oldTile;
     private GameObject currentTile;
     private Vector2Int currentLocation;
@@ -77,6 +78,8 @@ public class PlayerController : MonoBehaviour
         hpText.text = playerHealth.ToString();
         shieldSlider.value = shield;
         shieldText.text = shield.ToString();
+
+        audioManager = FindObjectOfType<AudioManager>();
 
         animator = selectedUnit.GetComponent<Animator>();   // Animator for player
 
@@ -291,9 +294,11 @@ public class PlayerController : MonoBehaviour
         // face the direction of the enemy to attack
         selectedUnit.LookAt(new Vector3(selectedLocation.x, selectedUnit.position.y, selectedLocation.y));
         StartCoroutine(WaitAndAnimate(1.0f, "isBasicAttack"));
+        StartCoroutine(audioManager.WaitAndPlaySFX(0.7f,"attack"));
 
         DisableAttackableTiles();
         DealAttack(dmg);
+
         isAttacking = false;
     }
 
@@ -393,6 +398,7 @@ public class PlayerController : MonoBehaviour
     public void ConfirmSlashAttackCard(int dmg)
     {
         StartCoroutine(WaitAndAnimate(1.0f, "isSlashAttack"));
+        StartCoroutine(audioManager.WaitAndPlaySFX(1f,"attack"));        
         DisableAttackableTiles();
         DealSlashAttack(dmg);
     }
@@ -520,6 +526,7 @@ public class PlayerController : MonoBehaviour
         // face the direction of the enemy to attack
         selectedUnit.LookAt(new Vector3(selectedLocation.x, selectedUnit.position.y, selectedLocation.y));
         StartCoroutine(WaitAndAnimate(1.0f, "isExecuteAttack"));
+        StartCoroutine(audioManager.WaitAndPlaySFX(1.2f,"attack"));
         DisableAttackableTiles();
         Execute(dmg);
         isAttacking = false;
