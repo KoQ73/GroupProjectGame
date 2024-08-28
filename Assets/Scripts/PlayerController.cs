@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
                             child.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
                         }
                         oldTile.GetComponentInChildren<MeshRenderer>().material=movableTile;
-                        UnityEngine.Debug.Log("current: "+ oldTile);
+                        //UnityEngine.Debug.Log("current: "+ oldTile);
                     }
                     oldTile = currentTile;
                 }
@@ -385,7 +385,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Find UnitController and make isDefeated true
-        UnityEngine.Debug.Log(units.Count);
+        //UnityEngine.Debug.Log(units.Count);
         checkLevelOver();
     }
 
@@ -513,7 +513,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        UnityEngine.Debug.Log(units.Count);
+        //UnityEngine.Debug.Log(units.Count);
         checkLevelOver();
     }
 
@@ -627,7 +627,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Find UnitController and make isDefeated true
-        UnityEngine.Debug.Log(units.Count);
+        //UnityEngine.Debug.Log(units.Count);
         checkLevelOver();
     }
 
@@ -739,7 +739,7 @@ public class PlayerController : MonoBehaviour
             List<Tile> testPath = pathFinder.findPath(gridManager.GetTile(currentLocation), gridManager.GetTile(movableCords[i]));
             if (testPath.Count <= moveDistance && testPath.Count != 0)
             {
-                UnityEngine.Debug.Log(movableCords[i] + " Count: " + testPath.Count);
+                //UnityEngine.Debug.Log(movableCords[i] + " Count: " + testPath.Count);
                 tempCords.Add(movableCords[i]);
             }
         }

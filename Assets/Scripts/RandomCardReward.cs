@@ -90,7 +90,7 @@ public class RandomCardReward : MonoBehaviour
         }
         else
         {
-            Debug.LogError("No cards available in availableCards list!");
+            //Debug.LogError("No cards available in availableCards list!");
         }
     }
 
@@ -145,12 +145,12 @@ public class RandomCardReward : MonoBehaviour
         if (selectedCard != null)
         {
             // Add the selected card to the player's deck for the next level
-            Debug.Log("Transferring selected card: " + selectedCard.cardName);
+            //Debug.Log("Transferring selected card: " + selectedCard.cardName);
             cardManager.deckPile.Add(selectedCard);
         }
         else
         {
-            Debug.LogWarning("No card selected!");
+            //Debug.LogWarning("No card selected!");
         }
     }
 

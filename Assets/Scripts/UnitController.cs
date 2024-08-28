@@ -286,7 +286,7 @@ public class UnitController : MonoBehaviour
             animator = unit.unitGameObject.GetComponent<Animator>();
             if (animator == null)
             {
-                Debug.Log("Animator is not on");
+                //Debug.Log("Animator is not on");
             }
             if (!isDefeated)
             {
